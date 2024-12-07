@@ -1,0 +1,7 @@
+.hoverB:hover{
+/* border-bottom: #27272a 2px solid; */
+background-color: #27272a21;
+scale: 1.05;
+border-radius: 1.875rem;
+transition: all 0.1s;
+}
