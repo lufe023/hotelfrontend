@@ -39,6 +39,7 @@ function App() {
             <Route path='/room/:id' element={<Rooms />} />
             <Route path='/chats' element={<Chats />} />
             <Route path='/support' element={<AllChats />} />
+            <Route path='/support/:id' element={<AllChats />} />
             <Route path='/gallerys' element={<SeePictures />} />
             <Route path='/prepare-checking/:id' element={<CheckIn/>}/>
           </Route>

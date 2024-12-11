@@ -1,12 +1,77 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import getConfig from '../../utils/getConfig';
+import Spinner from '../spinner/Spinner';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale'; // Importación directa de la localización
 
 const Bookin = () => {
+  const [isLoading, setIsLoading] = useState(true)
+  const [reservations, setReservations] = useState()
+
+  //selector de clase segun el estado
+  const statusClass = (roomStatus) => {
+    switch (roomStatus) {
+      case "Pending":
+        return { className: "bg-warning", label: "Pendiente" };
+      case "Approved":
+        return { className: "bg-success", label: "Aprobado" };  
+      
+      default:
+        return { className: "bg-secondary", label: "Desconocido" }; // Respaldo
+    }
+  };
+
+  const getReservatiosToWork = () =>{
+    const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/reservations/getReservationsToWork`;
+    axios
+        .get(URL, getConfig())
+        .then((res) => {
+          setIsLoading(false)
+          setReservations(res.data);
+        })
+        .catch((err) => console.log(err));
+  }
+
+  useEffect(() => {
+    getReservatiosToWork()
+  }, [])
+
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    date.setMinutes(date.getMinutes() + date.getTimezoneOffset()); // Ajuste manual
+    return format(date, "dd 'de' MMM 'del' yy", { locale: es });
+  };
+
+
+  console.log(reservations)
+
   return (
-    <div className="col-lg-12 col-md-6 mb-md-0 mb-4">
+  <div className="col-lg-12 col-md-6 mb-md-0 mb-4">
  <div className="card mb-4">
   <div className="card-header pb-0">
     <h6>Tabla de Clientes</h6>
   </div>
+  {
+  isLoading?
+<div
+  className="row"
+  style={{
+    justifyContent: 'center',
+    paddingTop:100,
+    position: 'absolute',
+    zIndex: 1000,
+    height: '100%',
+    width: '99%',
+    backdropFilter: 'blur(1px)', // Efecto de desenfoque
+    backgroundColor: 'rgba(255, 255, 255, 0.5)', // Fondo semitransparente
+    borderRadius: '0.5rem'
+  }}
+>
+  <Spinner />
+</div>:''
+}
   <div className="card-body px-0 pt-0 pb-2">
     <div className="table-responsive p-0">
       <table className="table align-items-center mb-0">
@@ -16,157 +81,45 @@ const Bookin = () => {
             <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tipo</th>
             <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
             <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Estadía</th>
-           
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>
-              <div className="d-flex px-2 py-1">
-                <div>
-                  <img src="./src/assets/img/team-2.jpg" className="avatar avatar-sm me-3" alt="user1" />
-                </div>
-                <div className="d-flex flex-column justify-content-center">
-                  <h6 className="mb-0 text-sm">John Michael</h6>
-                  <p className="text-xs text-secondary mb-0">john@creative-tim.com</p>
-                </div>
-              </div>
-            </td>
-            <td>
-              <p className="text-xs font-weight-bold mb-0">Estándar</p>
-              <p className="text-xs text-secondary mb-0">2 personas</p>
-            </td>
-            <td className="align-middle text-center text-sm">
-              <span className="badge badge-sm bg-success">Completado</span>
-            </td>
-            <td className="align-middle text-center">
-              <span className="text-secondary text-xxs">11/08/24</span>
-                -  
-              <span className="text-secondary text-xxs">13/08/24</span>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div className="d-flex px-2 py-1">
-                <div>
-                  <img src="./src/assets/img/team-3.jpg" className="avatar avatar-sm me-3" alt="user2" />
-                </div>
-                <div className="d-flex flex-column justify-content-center">
-                  <h6 className="mb-0 text-sm">Alexa Liras</h6>
-                  <p className="text-xs text-secondary mb-0">alexa@creative-tim.com</p>
-                </div>
-              </div>
-            </td>
-            <td>
-              <p className="text-xs font-weight-bold mb-0">Doble</p>
-              <p className="text-xs text-secondary mb-0">2 personas</p>
-            </td>
-            <td className="align-middle text-center text-sm">
-              <span className="badge badge-sm bg-warning">Pendiente</span>
-            </td>
-            <td className="align-middle text-center">
-            <span className="text-secondary text-xxs">11/08/24</span>
-                -  
-              <span className="text-secondary text-xxs">13/08/24</span>
-            </td>
+          
+          {
+            reservations?.results.map((reservation)=> 
+                     
+       {
+        const { className, label } = statusClass(reservation.status);
+        return (
        
-          </tr>
-          <tr>
+          <tr key={reservation.id}>
             <td>
               <div className="d-flex px-2 py-1">
-                <div>
-                  <img src="./src/assets/img/team-4.jpg" className="avatar avatar-sm me-3" alt="user3" />
-                </div>
                 <div className="d-flex flex-column justify-content-center">
-                  <h6 className="mb-0 text-sm">Laurent Perrier</h6>
-                  <p className="text-xs text-secondary mb-0">laurent@creative-tim.com</p>
+                  <h6 className="mb-0 text-sm">{reservation.guest.firstName}</h6>
+                  <p className="text-xs text-secondary mb-0">{reservation.guest.email}</p>
+                  <p className="text-xs text-secondary mb-0">{reservation.guest.phone}</p>
                 </div>
               </div>
             </td>
             <td>
-              <p className="text-xs font-weight-bold mb-0">Executive</p>
-              <p className="text-xs text-secondary mb-0">Projects</p>
+              <p className="text-xs font-weight-bold mb-0">{reservation.Room.roomType}</p>
+              <p className="text-xs text-secondary mb-0">No. {reservation.Room.roomNumber}</p>
             </td>
             <td className="align-middle text-center text-sm">
-              <span className="badge badge-sm bg-gradient-success">Online</span>
+              <span className={`badge badge-sm ${className}`}>{label}</span>
             </td>
-            <td className="align-middle text-center">
-              <span className="text-secondary text-xs font-weight-bold">19/09/17</span>
+            <td className="align-middle">
+            <p className="text-xs text-secondary mb-0"><b>Entra: </b>{formatDate(reservation.checkIn)}</p>
+         
+            <p className="text-xs text-secondary mb-0"> <b>Sale: </b>{formatDate(reservation.checkOut)}</p>
             </td>
-       
           </tr>
-          <tr>
-            <td>
-              <div className="d-flex px-2 py-1">
-                <div>
-                  <img src="./src/assets/img/team-3.jpg" className="avatar avatar-sm me-3" alt="user4" />
-                </div>
-                <div className="d-flex flex-column justify-content-center">
-                  <h6 className="mb-0 text-sm">Michael Levi</h6>
-                  <p className="text-xs text-secondary mb-0">michael@creative-tim.com</p>
-                </div>
-              </div>
-            </td>
-            <td>
-              <p className="text-xs font-weight-bold mb-0">Programator</p>
-              <p className="text-xs text-secondary mb-0">Developer</p>
-            </td>
-            <td className="align-middle text-center text-sm">
-              <span className="badge badge-sm bg-gradient-success">Online</span>
-            </td>
-            <td className="align-middle text-center">
-              <span className="text-secondary text-xs">24/12/08</span>
-            </td>
-       
-          </tr>
-          <tr>
-            <td>
-              <div className="d-flex px-2 py-1">
-                <div>
-                  <img src="./src/assets/img/team-2.jpg" className="avatar avatar-sm me-3" alt="user5" />
-                </div>
-                <div className="d-flex flex-column justify-content-center">
-                  <h6 className="mb-0 text-sm">Richard Gran</h6>
-                  <p className="text-xs text-secondary mb-0">richard@creative-tim.com</p>
-                </div>
-              </div>
-            </td>
-            <td>
-              <p className="text-xs font-weight-bold mb-0">Manager</p>
-              <p className="text-xs text-secondary mb-0">Executive</p>
-            </td>
-            <td className="align-middle text-center text-sm">
-              <span className="badge badge-sm bg-gradient-secondary">Offline</span>
-            </td>
-            <td className="align-middle text-center">
-              <span className="text-secondary text-xs">04/10/21</span>
-            </td>
-       
-          </tr>
-          <tr>
-            <td>
-              <div className="d-flex px-2 py-1">
-                <div>
-                  <img src="./src/assets/img/team-4.jpg" className="avatar avatar-sm me-3" alt="user6" />
-                </div>
-                <div className="d-flex flex-column justify-content-center">
-                  <h6 className="mb-0 text-sm">Miriam Eric</h6>
-                  <p className="text-xs text-secondary mb-0">miriam@creative-tim.com</p>
-                </div>
-              </div>
-            </td>
-            <td>
-              <p className="text-xs font-weight-bold mb-0">Programtor</p>
-              <p className="text-xs text-secondary mb-0">Developer</p>
-            </td>
-            <td className="align-middle text-center text-sm">
-              <span className="badge badge-sm bg-gradient-secondary">Offline</span>
-            </td>
-            <td className="align-middle text-center">
-              <span className="text-secondary text-xs font-weight-bold">14/09/20</span>
-            </td>
-       
-          </tr>
+          )
+}
+            )
+          }
+        
         </tbody>
       </table>
     </div>

@@ -1,17 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { io } from "socket.io-client";
 import Swal from 'sweetalert2';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import getConfig from '../../utils/getConfig';
+import { ChatContext } from "../../utils/ChatContext"; // Importa
+import { Link } from 'react-router-dom';
 
-const socket = io(import.meta.env.VITE_API_SERVER); // URL de tu backend
+const socket = io(import.meta.env.VITE_API_SERVER, {
+  autoConnect: true, // Reconectar automáticamente
+  reconnection: true, // Habilitar reconexión
+  reconnectionAttempts: 5, // Número de intentos antes de fallar
+  reconnectionDelay: 1000, // Tiempo entre intentos
+});
 const token = localStorage.getItem("token");
 
 export const Notifications = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [notifications, setNotifications] = useState([]);
+  const { getMyChats } = useContext(ChatContext); 
 
   // Mapa de estilos para los tipos de notificación
   const notificationTypeStyles = {
@@ -46,8 +54,7 @@ export const Notifications = () => {
       icon: "info",
       title, // Usar el título del tipo de notificación
     });
-  
-    // Actualizar el estado de las notificaciones
+    getMyChats()
     setNotifications((prev) => [data, ...prev]);
   };
 
@@ -61,34 +68,46 @@ export const Notifications = () => {
     }
   };
 
+
+      // Manejador para la conexión inicial
+      const handleConnect = () => {
+        // console.log("Conectado al servidor de Socket.IO:", socket.id);
+        socket.emit("authenticate", token); // Enviar token al conectarse
+      };
+
+
   useEffect(() => {
     if (!token) {
       console.error("Token no encontrado. Por favor inicia sesión.");
       return;
     }
   
-    // Escuchar la conexión y reconexión del socket
-    socket.on("connect", () => {
-      console.log("Conectado al servidor de Socket.IO:", socket.id);
+    handleConnect()
+    // Manejador para la reconexión
+    const handleReconnect = () => {
+      console.log("Reconectado al servidor de Socket.IO:", socket.id);
+      socket.emit("authenticate", token); // Reenviar el token tras reconectar
+    };
   
-      // Emitir evento de autenticación con el token
-      socket.emit("authenticate", token);
-    });
-  
+    // Configuración de eventos de Socket.IO
+    socket.on("connect", handleConnect); // Cuando se conecta
+    socket.on("reconnect", handleReconnect); // Cuando se reconecta
     socket.on("disconnect", () => {
       console.warn("Desconectado del servidor de Socket.IO.");
     });
-  
-    // Escuchar nuevas notificaciones
     socket.on("new-notification", handleNewNotification);
   
+    // Cleanup al desmontar el componente
     return () => {
-      socket.off("connect");
+      socket.off("connect", handleConnect);
+      socket.off("reconnect", handleReconnect);
       socket.off("disconnect");
       socket.off("new-notification");
     };
   }, [token]);
 
+
+  
   useEffect(() => {
     getMyNotifications();
   }, []);
@@ -99,6 +118,8 @@ export const Notifications = () => {
     }
   };
 
+  localStorage.debug = "socket.io-client:socket";
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
@@ -106,15 +127,32 @@ export const Notifications = () => {
     };
   }, []);
 
+  const isValidDate = (date) => {
+    const parsedDate = new Date(date);
+    return !isNaN(parsedDate.getTime());
+  };
+const ternToJson = (text)=>{
+return  JSON.parse(text)
+}
+
+const putNotificatoionsRead = (id) => {
+  const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/notifications/${id}`;
+  axios
+      .patch(URL,{isRead:true}, getConfig())
+      .then((res) => {
+
+      })
+      .catch((err) => console.log(err));
+}
+
   return (
     <>
       <button
         className="nav-link text-body p-0"
-        id="dropdownMenuButton"
-        data-bs-toggle="dropdown"
+        // id="dropdownMenuButton"
+        // data-bs-toggle="dropdown"
         aria-expanded={openDropdown}
         onClick={toggleDropdown}
-
       >
         <i className="fa fa-bell cursor-pointer" >
           <span className=" bg-info text-white" style={{padding:3, borderRadius:10, fontSize:"10px",position:"relative", top:"-5px", left:"-1px"}}>{notifications.length}</span>
@@ -123,14 +161,16 @@ export const Notifications = () => {
 
       {openDropdown && (
         <ul className="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4 show" aria-labelledby="dropdownMenuButton">
-          {notifications.map((notification, index) => {
+          {notifications?.map((notification, index) => {
             const { type, createdAt } = notification;
             const { icon, color, title } = notificationTypeStyles[type] || notificationTypeStyles.default;
-            const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true, locale: es });
+           const timeAgo = isValidDate(createdAt)
+  ? formatDistanceToNow(new Date(createdAt), { addSuffix: true, locale: es })
+  : "Fecha no disponible";
 
             return (
               <li key={index} className="mb-2">
-                <a className="dropdown-item border-radius-md">
+                <Link to={`/support/${ternToJson(notification.content).chat.chat.id}`} onClick={()=>putNotificatoionsRead(notification.id)} className="dropdown-item border-radius-md">
                   <div className="d-flex py-1">
                     <div className="my-auto">
                       <div className={`avatar avatar-sm ${color} me-3`}>
@@ -147,7 +187,7 @@ export const Notifications = () => {
                       </p>
                     </div>
                   </div>
-                </a>
+                </Link>
               </li>
             );
           })}
