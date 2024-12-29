@@ -1,346 +1,216 @@
-import React, { useEffect, useState } from 'react'
-
-
-import { useMenu } from '../../utils/MenuContext';
-import Aside from '../aside';
-import Navbar from '../Navbar';
+import React, { useEffect, useState } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import getConfig from '../../utils/getConfig';
-import { useParams } from 'react-router-dom';
-import Gallery from '../gallery/Gallery';
-import GalleryUploader from '../gallery/GalleryUploader';
-import AmenitiesUpdate from './AmenitiesUpdate';
+import Spinner from '../spinner/Spinner';
 import RoomDetailsUpdate from './RoomDetailsUpdate';
 import PendingReservations from './PendingReservations';
-import History from './History';
+import Gallery from '../gallery/Gallery';
+import GalleryUploader from '../gallery/GalleryUploader';
+import Amenities from './Amenities';
 import CheckIn from '../dashboard/CheckIn';
+import History from './History';
+import AmenitiesUpdate from './AmenitiesUpdate';
+import Aside from '../aside';
+import Navbar from '../Navbar';
+import { useMenu } from '../../utils/MenuContext';
+import RoomIssuesList from './RoomIssuesList';
+import RoomCleaningsList from './RoomCleaningsList';
 
 const Rooms = () => {
-const {id} = useParams()
-  const [isLoading, setIsLoading] = useState(false)
-  const [room, setRoom] =useState([])
-  const [editing, setEditing] = useState(false)
+  const [hasScrolled, setHasScrolled] = useState(false);
+  const { id } = useParams();
+  const location = useLocation(); // Captura la información de la URL actual
+  const queryParams = new URLSearchParams(location.search);
+  let action = queryParams.get("action"); // Lee el parámetro "action"
+  const [isLoading, setIsLoading] = useState(false);
+  const [room, setRoom] = useState(null);
+  const [editing, setEditing] = useState(false);
+
+  const { isPinned } = useMenu(); // Controla el estado del menú
 
   const getRoomsInfo = (id) => {
-    // const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/summary/rooms?ubication=${param}`;
-    setIsLoading(true)
+
+    setIsLoading(true);
     const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/rooms/${id}`;
     axios
-        .get(URL, getConfig())
-        .then((res) => {
-          setRoom(res.data)
-            
-        })
-        .catch((err) => console.log(err));
-  }
+      .get(URL, getConfig())
+      .then((res) => {
+        setRoom(res.data);
+        setIsLoading(false);
+      })
+      .catch((err) => console.log(err));
+  };
 
-  
   useEffect(() => {
-    getRoomsInfo(id)
-  }, [])
+    getRoomsInfo(id);
+  }, [id]);
 
-    const { isPinned } = useMenu(); // Ahora esto funcionará correctamente
+  // Efecto para hacer scroll a la sección correspondiente
+  useEffect(() => {
+
+    if (action && room && !hasScrolled) {
+      // Esperamos medio segundo para que el navegador complete el scroll
+      setTimeout(() => {
+        let targetElement = document.getElementById(action); // Acción es el id al que hacer scroll (como 'history')
+  
+        if (targetElement) {
+          // Usamos getBoundingClientRect() para obtener la posición del elemento dentro del viewport
+          const rect = targetElement.getBoundingClientRect();
+  
+          // Ajustamos el scroll después de que el navegador haya ido al top del elemento
+          window.scrollTo({
+            top: rect.top + window.scrollY - 110, // Ajusta el scroll teniendo en cuenta el margen de 50px
+            behavior: "smooth", // Desplazamiento suave
+          });
+  
+          // Agregar la clase para la animación
+          targetElement.classList.add('card-highlight');
+  
+          // Eliminar la clase después de que la animación haya terminado (0.3 segundos)
+          setTimeout(() => {
+            targetElement.classList.remove('card-highlight');
+            
+          }, 300); // Duración de la animación
+
+          setTimeout(() => {
+          // Marcar que el scroll ya se ha realizado
+          setHasScrolled(true);
+            
+          }, 350); // Duración de la animación
+        }
+      }, 500); // Espera un poco para asegurarse de que el componente haya sido renderizado
+      
+    }
+
+      
+  }, [action, room, hasScrolled]);
+  
+
+  const statusClass = (roomStatus) => {
+    switch (roomStatus) {
+      case "available":
+        return { className: "", label: "Disponible" };
+      case "cleaning":
+        return { className: "bg-dark text-white  ", label: "Limpiando" };
+      case "occupied":
+        return { className: "bg-primary", label: "Reservada" };
+      case "pendingReservation":
+        return { className: "bg-warning", label: "Reservacion Pendiente" };
+      case "repairing":
+        return { className: "bg-danger", label: "Hay un problema reportado" };
+      default:
+        return { className: "bg-secondary", label: "Desconocido" };
+    }
+  };
+
+  const { className, label } = statusClass(room?.status || "");
+
   return (
-    <div className={`g-sidenav-show  ${isPinned ? 'g-sidenav-pinned' : ''}`}>
-    <Aside/>
-    <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-      <Navbar />
-      <div className="container-fluid py-4">
-        <div className="row">
-      <div className="col-lg-8 col-md-6 mb-md-0 mb-4">
-
-  <div className="card rounded-4 shadow-sm" style={{marginBottom:20}}>
-{
-  editing?
-  <RoomDetailsUpdate room={room} getRoomsInfo={getRoomsInfo} setEditing={setEditing}/>
-  :
-  <div className="card-header  rounded-top-4 pb-2">
-    <div className="card-tools  ms-auto text-end">
-    <button className="btn btn-link px-3 mb-0 bg-primary text-white" onClick={()=>setEditing(true)}><i className="fas fa-pencil-alt me-2 "  /> Editar</button>
-</div>
-    <h6 className="mb-1">Habitación #{room?.roomNumber}</h6>
-    <p className="text-sm mb-0">
-      <i className="fas fa-map-marker-alt me-2"></i>{room?.ubication}
-    </p>
-  </div>
-}
-
-  <div className="card-body p-4">
-    <div className="d-flex align-items-center gap-4 mb-3">
-      {/* Ícono de habitación */}
-      <div
-        className="icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm"
-        style={{ width: "50px", height: "50px", aspectRatio:1 }}
-      >
-        <i className="fas fa-bed"></i>
-      </div>
-      <div>
-        <h5 className="text-dark mb-1">{room?.roomType}</h5>
-        <p className="text-muted mb-0">{room?.description}</p>
-      </div>
-    </div>
-    <div className="d-flex flex-column gap-4">
-  {/* Amenidades disponibles */}
-  <div>
-    <h5 className="mb-3">Amenidades Disponibles</h5>
-    <div className="d-flex justify-content-start gap-5" style={{ flexWrap: "wrap" }}>
-      <div className="text-center">
-        <i className="fas fa-bed text-primary mb-1" style={{ fontSize: "15px" }}></i>
-        <p className="text-sm mb-0">{room.bedQuantity} cama{room.bedQuantity > 1 ? "s" : ""}</p>
-      </div>
-      <div className="text-center">
-        <i className="fas fa-user-friends text-primary mb-1" style={{ fontSize: "15px" }}></i>
-        <p className="text-sm mb-0">{room.maxOccupancy} persona{room.maxOccupancy > 1 ? "s" : ""}</p>
-      </div>
-      {room.hotWater && (
-  <div className="text-center">
-    <i className="fas fa-temperature-high text-primary mb-1" style={{ fontSize: "15px" }}></i>
-    <p className="text-sm mb-0">Agua Caliente</p>
-  </div>
-)}
-    {room.privateBathroom && (
-    <div className="text-center">
-      <i className="fas fa-bath text-primary mb-1" style={{ fontSize: "15px" }}></i>
-      <p className="text-sm mb-0">Baño Privado</p>
-    </div>
-  )}
-      {room.wifi && (
-        <div className="text-center">
-          <i className="fas fa-wifi text-primary mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Acceso a Wifi</p>
-        </div>
-      )}
-      {room.landscapeView && (
-        <div className="text-center">
-          <i className="fas fa-mountain text-primary mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Vista a Paisaje</p>
-        </div>
-      )}
-      {room.balcony && (
-        <div className="text-center">
-          <i className="fas fa-hotel text-primary mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Balcón</p>
-        </div>
-      )}
-      {room.tv && (
-        <div className="text-center">
-          <i className="fas fa-tv text-primary mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">TV</p>
-        </div>
-      )}
-      {room.minibar && (
-        <div className="text-center">
-          <i className="fas fa-wine-bottle text-primary mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Minibar</p>
-        </div>
-      )}
-      {room.coffeeMaker && (
-        <div className="text-center"> 
-          <i className="fas fa-coffee text-primary mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Cafetera</p>
-        </div>
-      )}
-          {room.minibar && (
-            <div className="text-center">
-              <i className="fas fa-glass-cheers text-primary mb-1" style={{ fontSize: "15px" }}></i>
-              <p className="text-sm mb-0">Minibar</p>
+    <div className={`g-sidenav-show ${isPinned ? "g-sidenav-pinned" : ""}`}>
+      <Aside />
+        <Navbar />
+      <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg pt-7">
+        <div className="container-fluid py-4">
+          {isLoading && (
+            <div
+              className="row"
+              style={{
+                justifyContent: "center",
+                paddingTop: 100,
+                position: "absolute",
+                zIndex: 1000,
+                height: "100%",
+                width: "99%",
+                backdropFilter: "blur(1px)",
+                backgroundColor: "rgba(255, 255, 255, 0.5)",
+                borderRadius: "0.5rem",
+              }}
+            >
+              <Spinner />
             </div>
           )}
-      {room.airConditioning && (
-        <div className="text-center">
-          <i className="fas fa-snowflake text-primary mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Aire Acondicionado</p>
-        </div>
-      )}
-      {room.safeBox && (
-       <div className="text-center">
-         <i className="fas fa-lock text-primary mb-1" style={{ fontSize: "15px" }}></i>
-         <p className="text-sm mb-0">Caja Fuerte</p>
-       </div>
-     )}
 
-      {room.breakfastIncluded && (
-        <div className="text-center">
-          <i className="fas fa-bread-slice text-primary mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Desayuno Incluido</p>
-        </div>
-      )}
+          {room && (
+            <div className="row">
+              <div className="col-lg-8 col-md-6 mb-md-0 mb-4">
+                <div className="card rounded-4 shadow-sm" style={{ marginBottom: 20 }}>
+                  {editing ? (
+                    <RoomDetailsUpdate room={room} getRoomsInfo={getRoomsInfo} setEditing={setEditing} />
+                  ) : (
+                    <div className={`card-header ${className} rounded-top-4 pb-2`}>
+                      <div className="card-tools ms-auto text-end">
+                        <button className="btn btn-link px-3 mb-0 bg-primary text-white" onClick={() => setEditing(true)}>
+                          <i className="fas fa-pencil-alt me-2" /> Editar
+                        </button>
+                      </div>
+                      <h6 className={`mb-1 ${className}`}>Habitación #{room?.roomNumber} <span className='text-sm'>( {label} )</span></h6>
+                      <p className="text-sm mb-0">
+                        <i className="fas fa-map-marker-alt me-2"></i>{room?.ubication}
+                      </p>
+                    </div>
+                  )}
 
-    {room.parking && (
-        <div className="text-center">
-          <i className="fas fa-parking text-primary mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Parqueo</p>
-        </div>
-      )}
-    {room.poolAccess && (
-        <div className="text-center">
-          <i className="fas fa-swimmer text-primary mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Acceso a Piscina</p>
-        </div>
-      )}
+                  <div className="card-body p-4">
+                    <div className="d-flex align-items-center gap-4 mb-3">
+                      <div
+                        className="icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+                        style={{ width: "50px", height: "50px", aspectRatio: 1 }}
+                      >
+                        <i className="fas fa-bed"></i>
+                      </div>
+                      <div>
+                        <h5 className="text-dark mb-1">{room?.roomType}</h5>
+                        <p className="text-muted mb-0">{room?.description}</p>
+                      </div>
+                    </div>
+                    <div className="d-flex flex-column gap-4">
+                      <Amenities room={room} />
+                    </div>
+                  </div>
+                </div>
+                {room?.reservations?.length > 0 && <PendingReservations reservations={room.reservations} />}
+                <div className="row" id='gallery' style={{ marginTop: 20 }}>
+                  <div>
+                    <div className="card rounded-4 shadow-sm">
+                      <div className="card-body">
+                        {room?.gallery?.gallery_images.length > 0 && (
+                          <Gallery images={room?.gallery?.gallery_images} getRoomsInfo={getRoomsInfo} roomId={id} />
+                        )}
 
-    {room.gymAccess && (
-        <div className="text-center">
-          <i className="fas fa-dumbbell text-primary mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Acceso a gimnasio</p>
+                        <GalleryUploader
+                          galleryId={room.galleryId || null}
+                          galleryName={`Galería de Habitación ${room.roomNumber || "Sin Número"}`}
+                          roomId={room.id}
+                          getRoomsInfo={getRoomsInfo}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <RoomCleaningsList roomId={room.id} cleanings={room?.room_cleanings}/>
+                </div>
+              </div>
+           
+              <div className="col-lg-4 col-md-6" id="checkin">
+                {room && <CheckIn id={id} room={room} getRoomsInfo={getRoomsInfo} />}
+                <div style={{ marginTop: "20px" }} id="history">
+                  {room && id && <History id={room.id} />}
+                </div>
+                {room && (
+                  <div style={{ marginTop: "20px" }} id="actualizar">
+                    <AmenitiesUpdate room={room} getRoomsInfo={getRoomsInfo} />
+                  </div>
+                )}
+                  <RoomIssuesList getRoomsInfo={getRoomsInfo} roomId={room.id} room={room}/>
+              </div>
+
+
+            </div>
+          )}
         </div>
-      )}
-
-
+      </main>
     </div>
-  </div>
-  <hr className='bg-primary'/>
-  <div>
-    <h5 className="mb-3">Amenidades No Disponibles</h5>
-    <div className="d-flex justify-content-start gap-5" style={{ flexWrap: "wrap" }}>
-      {!room.hotWater && (
-        <div className="text-center">
-          <i className="fas fa-temperature-high text-dark mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Agua Caliente</p>
-        </div>
-      )}
-      {!room.privateBathroom && (
-    <div className="text-center">
-      <i className="fas fa-bath text-dark mb-1" style={{ fontSize: "15px" }}></i>
-      <p className="text-sm mb-0">Baño Privado</p>
-    </div>
-  )}
-      {!room.wifi && (
-        <div className="text-center">
-          <i className="fas fa-wifi text-dark mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Acceso a Wifi</p>
-        </div>
-      )}
-      {!room.landscapeView && (
-        <div className="text-center">
-          <i className="fas fa-mountain text-dark mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Vista a Paisaje</p>
-        </div>
-      )}
-      {!room.balcony && (
-        <div className="text-center">
-          <i className="fas fa-hotel text-dark mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Balcón</p>
-        </div>
-      )}
-      {!room.tv && (
-        <div className="text-center">
-          <i className="fas fa-tv text-dark mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">TV</p>
-        </div>
-      )}
-      {!room.minibar && (
-        <div className="text-center">
-          <i className="fas fa-glass-cheers text-dark mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Minibar</p>
-        </div>
-      )}
-       {!room.coffeeMaker && (
-        <div className="text-center"> 
-          <i className="fas fa-coffee text-dark mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Cafetera</p>
-        </div>
-      )}
-      {!room.airConditioning && (
-        <div className="text-center">
-          <i className="fas fa-snowflake text-dark mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Aire Acondicionado</p>
-        </div>
-      )}
-      {!room.safeBox && (
-        <div className="text-center">
-          <i className="fas fa-lock text-dark mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Caja Fuerte</p>
-        </div>
-      )}
+  );
+};
 
-      {!room.breakfastIncluded && (
-        <div className="text-center">
-          <i className="fas fa-bread-slice text-dark mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Desayuno No inluido</p>
-        </div>
-      )}
-
-    {!room.parking && (
-        <div className="text-center">
-          <i className="fas fa-parking text-dark mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Parqueo</p>
-        </div>
-      )}
-
-    {!room.poolAccess && (
-        <div className="text-center">
-          <i className="fas fa-swimmer text-dark mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Acceso a Piscina</p>
-        </div>
-      )}
-
-    {!room.gymAccess && (
-        <div className="text-center">
-          <i className="fas fa-dumbbell text-dark mb-1" style={{ fontSize: "15px" }}></i>
-          <p className="text-sm mb-0">Acceso a gimnasio</p>
-        </div>
-      )}
-
-    </div>
-  </div>
-</div>
-  </div>
-</div>
-  
-{
-  room?.reservations?.length > 0 && (<PendingReservations reservations={room.reservations}/>)
- }
-<div className="row" style={{marginTop:20}}>
-      <div >
-        <div className='card rounded-4 shadow-sm"'>
-          <div className="card-body">
-        {room?.gallery?.gallery_images.length >0?
-        <Gallery images={room?.gallery?.gallery_images} getRoomsInfo={getRoomsInfo} roomId={id}/>
-        :''
-        }
-
-        <GalleryUploader
-        galleryId={room.galleryId || null} // Si `galleryId` está disponible, se pasa; de lo contrario, null
-        galleryName={`Galería de Habitación ${room.roomNumber || 'Sin Número'}`} // Nombre dinámico
-        roomId={room.id} // Siempre se pasa el `roomId`
-        getRoomsInfo={getRoomsInfo} />
-        </div>
-        </div>
-
-
- </div>
-  </div>
-</div>
-
-{/* columna derecha */}
-  <div className="col-lg-4 col-md-6">
-  {/*Checkin*/}
-  
-  {room &&(<CheckIn id={id} room={room} getRoomsInfo={getRoomsInfo}/>)}
-
-
-{/*Historial de la habitacion*/}
-<div style={{marginTop:'20px'}}>
-  {room && id && (
-    <History id={room.id}/>
-  )}
-
-  </div>
-
-  {room &&(
-<div style={{marginTop:'20px'}} id="actualizar">
-<AmenitiesUpdate room={room} getRoomsInfo={getRoomsInfo} />
-</div>)
-}
-
-
-      </div>
-    </div>
-  </div>
-    </main>
-  </div>
-  )
-}
-
-export default Rooms
+export default Rooms;

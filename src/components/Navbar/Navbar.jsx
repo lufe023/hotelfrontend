@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useMenu } from '../../utils/MenuContext'
+import { useMenu,} from '../../utils/MenuContext'
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
@@ -8,10 +8,9 @@ import { Notifications } from './Notifications';
 
 
 const Navbar = () => {
-  const { toggleMenu } = useMenu();
+  const { toggleMenu, setIsPinned, isPinned} = useMenu();
   const navigate = useNavigate();
   const user = useSelector(state => state.userSlice);
-
 
   const LogGoutConfirm = ()=>{
     Swal.fire({
@@ -30,15 +29,15 @@ const Navbar = () => {
         }
       });
     }
-
-
   return (
- // <nav className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
-    <nav className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl position-sticky blur shadow-blur mt-4 left-auto top-1 z-index-sticky" id="navbarBlur" navbar-scroll="true">
-    <div className="container-fluid py-1 px-3">
-      <nav aria-label="breadcrumb">
-      </nav>
-      <div className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+    <div className='top-0 z-index-sticky' 
+    style={{width:"100%", margin:'auto',  boxSizing: "border-box", paddingRight:"calc(var(--bs-gutter-x)* 1)", paddingLeft:"20px", marginBottom:"20px", position:'fixed'}}>
+    <nav className="navbar  navbar-main px-0   border-radius-xl  blur shadow-blur mt-4 "
+    style={{width:"100vp", boxSizing: "border-box", marginRight:20,top: 0}}
+    id="navbarBlur" navbar-scroll="true">
+    <div className="container-fluid py-1 px-3" >
+
+      <div className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar" style={{minHeight: 40}}>
         <div className="ms-md-auto pe-md-3 d-flex align-items-center">
 
         </div>
@@ -51,7 +50,7 @@ const Navbar = () => {
             </Link>
           </li>
           <li className="nav-item d-xl-none ps-3 d-flex align-items-center" style={{cursor:'pointer'}}>
-            <a  className="nav-link text-body p-0" onClick={toggleMenu}>
+            <a  className="nav-link text-body p-0" onClick={()=>setIsPinned(!isPinned)}>
               <div className="sidenav-toggler-inner">
                 <i className="sidenav-toggler-line" />
                 <i className="sidenav-toggler-line" />
@@ -83,6 +82,7 @@ const Navbar = () => {
       </div>
     </div>
   </nav>
+  </div>
   )
 }
 

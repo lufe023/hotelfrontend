@@ -44,11 +44,8 @@ const Bookin = () => {
     return format(date, "dd 'de' MMM 'del' yy", { locale: es });
   };
 
-
-  console.log(reservations)
-
   return (
-  <div className="col-lg-12 col-md-6 mb-md-0 mb-4">
+  <div className="col-lg-12">
  <div className="card mb-4">
   <div className="card-header pb-0">
     <h6>Tabla de Clientes</h6>

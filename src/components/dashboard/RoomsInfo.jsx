@@ -11,6 +11,7 @@ const RoomsInfo = () => {
     const [ubication, setUbication] = useState('')
     const [allData, setAllData] = useState()
     const [allUbications, setAllUbications] = useState([])
+    const [summary, setSummary] = useState()
     const getRoomsInfo = (param) => {
       // const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/summary/rooms?ubication=${param}`;
       setIsLoading(true)
@@ -19,10 +20,11 @@ const RoomsInfo = () => {
       axios
           .get(URL, getConfig())
           .then((res) => {
-              setCards(res.data.allRooms)
+              setCards(res.data.rooms)
               setAllData(res.data)
               setAllUbications(res.data.allUbications)
               setIsLoading(false)
+
           })
           .catch((err) => console.log(err));
   
@@ -57,9 +59,11 @@ useEffect(() => {
       case "cleaning":
         return { className: "bg-dark", label: "Limpiando" };  // Naranja
       case "occupied":
-        return { className: "bg-primary", label: "Ocupada" };       // Azul
+        return { className: "bg-primary", label: "Reservada" };       // Azul 
+      case "pendingReservations":
+      return { className: "bg-warning", label: "Pendiente" };   
       case "repairing":
-        return { className: "bg-danger", label: "Hab con Problemas" }; // Rojo
+        return { className: "bg-danger", label: "Problemas" }; // Rojo
       
       default:
         return { className: "bg-secondary", label: "Desconocido" }; // Respaldo
@@ -114,9 +118,8 @@ useEffect(() => {
 
 
 
-{cards.map((card) => {
+{cards?.map((card) => {
   const { className, label } = statusClass(card.status);
-
   return (
     <div key={card.id} className="col-md-4 col-4 col-12 mb-4">
       <div className={`card ${className}`}>
@@ -126,7 +129,7 @@ useEffect(() => {
           
 
           <div className="row">
-            <div className="col-7 text-start">
+            <div className="col-6 text-start">
               <div className="icon icon-shape bg-white shadow text-center border-radius-2xl mb-2">
                 <i className="fas fa-bed text-dark text-lg" aria-hidden="true"></i>
               </div>
@@ -141,32 +144,38 @@ useEffect(() => {
                 </div>
               </div>
             </div>
-            <div className="col-5 text-end">
+            <div className="col-6 text-end">
               <div className="dropdown mb-3">
                 <a
                   className="cursor-pointer"
                   onClick={() => toggleDropdown(card.id)}
                 >
-                  <i className="fa fa-ellipsis-h text-white"></i>
+                  <i className="fa fa-ellipsis-h text-white"/>
                 </a>
                 {openDropdown === card.id && (
-                  <ul className="dropdown-menu px-2 py-3 show">
+                  <ul className="dropdown-menu px-1 py-2 show" style={{right:"0px"}}>
                     <li>
                       <Link className="dropdown-item border-radius-md" to={`/room/${card.id}`}>Ver detalles</Link>
                     </li>
                     <li>
-                      <Link to={`/prepare-checking/${card.id}`} className="dropdown-item border-radius-md">Reservar</Link>
+                      <Link to={`/room/${card.id}?action=checkin`} className="dropdown-item border-radius-md">Reservar</Link>
                     </li>
                     <li>
-                      <a className="dropdown-item border-radius-md" href="#!">Solicitar limpieza</a>
+                      <Link to={`/room/${card.id}?action=pending`} className="dropdown-item border-radius-md">Reservaciones</Link>
                     </li>
                     <li>
-                      <a className="dropdown-item border-radius-md" href="#!">Reportar un Problema</a>
+                    <Link to={`/room/${card.id}?action=cleaning`} className="dropdown-item border-radius-md">Solicitar limpieza</Link>
+                    </li>
+                    <li>
+                    <Link to={`/room/${card.id}?action=issue`} className="dropdown-item border-radius-md" href="#!">Problemas</Link>
+                    </li>
+                    <li>
+                      <Link to={`/room/${card.id}?action=history`} className="dropdown-item border-radius-md" href="#!">Ver historia</Link>
                     </li>
                   </ul>
                 )}
               </div>
-              <p className="text-white text-sm font-weight-bolder mt-auto mb-0">{label}</p>
+              <p className="text-white text-sm  mb-0">{label}</p>
             </div>
           </div>
         </div>
@@ -190,20 +199,20 @@ useEffect(() => {
   <div className="w-100">
     <div className="d-flex mb-2">
       <span className="me-2 text-sm font-weight-bold text-dark">Reservas Pendientes</span>
-      <span className="ms-auto text-sm font-weight-bold">{allData?.pendingReservations}</span>
+      <span className="ms-auto text-sm font-weight-bold">{allData?.summary?.pendingReservations}</span>
     </div>
     <div>
       <div className="progress progress-md">
         <div
           className="progress-bar bg-primary"
           role="progressbar"
-          aria-valuenow={allData?.pendingReservations}
+          aria-valuenow={allData?.summary?.pendingReservations}
           aria-valuemin={0}
-          aria-valuemax={allData?.allRooms?.length}
+          aria-valuemax={allData?.rooms?.length}
           style={{
             width: `${
-              allData?.allRooms?.length > 0
-                ? (allData?.pendingReservations / allData?.allRooms?.length) * 100
+              allData?.rooms?.length > 0
+                ? (allData?.summary.pendingReservations / allData?.rooms?.length) * 100
                 : 0
             }%`,
           }}
@@ -217,20 +226,20 @@ useEffect(() => {
   <div className="w-100">
     <div className="d-flex mb-2">
       <span className="me-2 text-sm font-weight-bold text-dark">Habitaciones Disponibles</span>
-      <span className="ms-auto text-sm font-weight-bold">{allData?.available}</span>
+      <span className="ms-auto text-sm font-weight-bold">{allData?.summary?.available}</span>
     </div>
     <div>
       <div className="progress progress-md">
         <div
           className="progress-bar bg-primary"
           role="progressbar"
-          aria-valuenow={allData?.available}
+          aria-valuenow={allData?.summary?.available}
           aria-valuemin={0}
-          aria-valuemax={allData?.allRooms?.length}
+          aria-valuemax={allData?.rooms?.length}
           style={{
             width: `${
-              allData?.allRooms?.length > 0
-                ? (allData?.available / allData?.allRooms?.length) * 100
+              allData?.rooms?.length > 0
+                ? (allData?.summary?.available / allData?.rooms?.length) * 100
                 : 0
             }%`,
           }}
@@ -243,20 +252,20 @@ useEffect(() => {
   <div className="w-100">
     <div className="d-flex mb-2">
       <span className="me-2 text-sm font-weight-bold text-dark">Habitaciones Ocupadas</span>
-      <span className="ms-auto text-sm font-weight-bold">{allData?.occupied}</span>
+      <span className="ms-auto text-sm font-weight-bold">{allData?.summary?.occupied}</span>
     </div>
     <div>
       <div className="progress progress-md">
         <div
           className="progress-bar bg-primary"
           role="progressbar"
-          aria-valuenow={allData?.occupied}
+          aria-valuenow={allData?.summary?.occupied}
           aria-valuemin={0}
-          aria-valuemax={allData?.allRooms?.length}
+          aria-valuemax={allData?.rooms?.length}
           style={{
             width: `${
-              allData?.allRooms?.length > 0
-                ? (allData?.occupied / allData?.allRooms?.length) * 100
+              allData?.rooms.length > 0
+                ? (allData?.summary.occupied / allData?.rooms?.length) * 100
                 : 0
             }%`,
           }}
@@ -269,20 +278,20 @@ useEffect(() => {
   <div className="w-100">
     <div className="d-flex mb-2">
       <span className="me-2 text-sm font-weight-bold text-dark">Habitaciones en Limpieza</span>
-      <span className="ms-auto text-sm font-weight-bold">{allData?.cleaning}</span>
+      <span className="ms-auto text-sm font-weight-bold">{allData?.summary?.cleaning}</span>
     </div>
     <div>
       <div className="progress progress-md">
         <div
           className="progress-bar bg-primary"
           role="progressbar"
-          aria-valuenow={allData?.cleaning}
+          aria-valuenow={allData?.summary?.cleaning}
           aria-valuemin={0}
-          aria-valuemax={allData?.allRooms?.length}
+          aria-valuemax={allData?.rooms?.length}
           style={{
             width: `${
-              allData?.allRooms?.length > 0
-                ? (allData?.cleaning / allData?.allRooms?.length) * 100
+              allData?.rooms?.length > 0
+                ? (allData?.summary?.cleaning / allData?.rooms?.length) * 100
                 : 0
             }%`,
           }}
@@ -295,20 +304,20 @@ useEffect(() => {
   <div className="w-100">
     <div className="d-flex mb-2">
       <span className="me-2 text-sm font-weight-bold text-dark">Habitaciones en Reparación</span>
-      <span className="ms-auto text-sm font-weight-bold">{allData?.repairing}</span>
+      <span className="ms-auto text-sm font-weight-bold">{allData?.summary?.repairing}</span>
     </div>
     <div>
       <div className="progress progress-md">
         <div
           className="progress-bar bg-danger"
           role="progressbar"
-          aria-valuenow={allData?.repairing}
+          aria-valuenow={allData?.summary?.repairing}
           aria-valuemin={0}
-          aria-valuemax={allData?.allRooms?.length}
+          aria-valuemax={allData?.rooms?.length}
           style={{
             width: `${
-              allData?.allRooms?.length > 0
-                ? (allData?.repairing / allData?.allRooms?.length) * 100
+              allData?.rooms?.length > 0
+                ? (allData?.summary?.repairing / allData?.rooms?.length) * 100
                 : 0
             }%`,
           }}

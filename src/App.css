@@ -5,3 +5,9 @@ scale: 1.05;
 border-radius: 1.875rem;
 transition: all 0.1s;
 }
+
+.card-highlight {
+    transform: scale(1.03); /* Aumenta el tamaño al 103% */
+    transition: transform 0.2s ease-in-out; /* Duración y suavizado de la animación */
+
+  }

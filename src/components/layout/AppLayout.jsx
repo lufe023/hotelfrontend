@@ -11,8 +11,8 @@ const AppLayout = () => {
   return (
     <div className={`g-sidenav-show  ${isPinned ? 'g-sidenav-pinned' : ''}`}>
     <Aside />
-    <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
       <Navbar />
+    <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg pt-7">
       <DashboardContent />
     </main>
   </div>

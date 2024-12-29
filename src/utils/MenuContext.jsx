@@ -13,7 +13,7 @@ export const MenuProvider = ({ children }) => {
   };
 
   return (
-    <MenuContext.Provider value={{ isPinned, toggleMenu }}>
+    <MenuContext.Provider value={{ isPinned, toggleMenu, setIsPinned }}>
       {children}
     </MenuContext.Provider>
   );

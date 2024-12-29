@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {useMenu} from '../../utils/MenuContext'
 import './aside.css'
 import Swal from 'sweetalert2';
 import {Link, NavLink, useNavigate } from 'react-router-dom';
 const Aside = () => {
   const { isPinned } = useMenu(); 
-  const { toggleMenu } = useMenu();
+  const { toggleMenu, setIsPinned } = useMenu();
   const navigate = useNavigate();
 
   const LogGoutConfirm = ()=>{
@@ -25,6 +25,19 @@ const Aside = () => {
         }
       });
     }
+
+      const handleClickOutside = (event) => {
+        if (!event.target.closest('.dropdown-menu') && !event.target.closest('.dropdown-toggle')) {
+          setIsPinned(null);
+        }
+      };
+    
+      useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+        };
+      }, []);
 
   return (
 

@@ -8815,7 +8815,7 @@ fieldset:disabled .btn {
 }
 
 .position-sticky {
-  position: sticky !important;
+  position: fixed !important;
 }
 
 .top-0 {

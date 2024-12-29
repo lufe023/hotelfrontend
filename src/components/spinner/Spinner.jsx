@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Spinner = () => {
+const Spinner = ({scale = "1.9"}) => {
   return (
-    <div className="spinner-border text-primary" style={{scale:"1.9"}}/>
+    <div className="spinner-border text-primary" style={{scale}}/>
 
   )
 }

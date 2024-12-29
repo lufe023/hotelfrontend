@@ -33,7 +33,7 @@ const PendingReservations = ({ reservations }) => {
   };
 
   return (
-    <div className="col-12">
+    <div className="col-12" id='pending'>
       <div className="card mb-4">
         <div className="card-header pb-0">
           <h6>Reservaciones Pendientes </h6>

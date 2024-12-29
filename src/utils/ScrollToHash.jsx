@@ -5,16 +5,17 @@ const ScrollToHash = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const hash = location.hash;
-    if (hash) {
-      const element = document.querySelector(hash); // Busca el elemento con ese id
+    // Obtiene la parte del hash directamente del objeto window
+    const cleanHash = window.location.hash.replace("#", "");
+    if (cleanHash) {
+      const element = document.getElementById(cleanHash);
       if (element) {
-        element.scrollIntoView({ behavior: "smooth" }); // Hace scroll al elemento
+        element.scrollIntoView({ behavior: "smooth" });
       }
     }
   }, [location]);
 
-  return null; // No renderiza nada en pantalla
+  return null;
 };
 
 export default ScrollToHash;
