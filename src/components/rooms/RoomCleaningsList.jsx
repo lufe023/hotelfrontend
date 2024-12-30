@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import getConfig from "../../utils/getConfig";
 
-const RoomCleaningsList = ({ cleanings, roomId }) => {
-  const [roomCleanings, setRoomCleanings] = useState(cleanings);
+const RoomCleaningsList = ({ roomCleanings, roomId }) => {
+
   const [newCleaning, setNewCleaning] = useState({
     cleaningType: "",
     notes: "",

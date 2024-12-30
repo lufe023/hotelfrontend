@@ -26,6 +26,7 @@ const Rooms = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [room, setRoom] = useState(null);
   const [editing, setEditing] = useState(false);
+  const [triger, setTriger] = useState(false);
 
   const { isPinned } = useMenu(); // Controla el estado del menú
 
@@ -39,12 +40,14 @@ const Rooms = () => {
         setRoom(res.data);
         setIsLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) =>{
+        setIsLoading(false);
+         console.log(err)});
   };
 
   useEffect(() => {
     getRoomsInfo(id);
-  }, [id]);
+  }, [id,triger]);
 
   // Efecto para hacer scroll a la sección correspondiente
   useEffect(() => {
@@ -107,21 +110,21 @@ const Rooms = () => {
   const { className, label } = statusClass(room?.status || "");
 
   return (
+
+ 
     <div className={`g-sidenav-show ${isPinned ? "g-sidenav-pinned" : ""}`}>
+       
       <Aside />
         <Navbar />
-      <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg pt-7">
-        <div className="container-fluid py-4">
-          {isLoading && (
+        {isLoading && (
             <div
-              className="row"
+              className="row d-flex align-items-center justify-content-center"
               style={{
                 justifyContent: "center",
-                paddingTop: 100,
-                position: "absolute",
+                position: "fixed",
                 zIndex: 1000,
                 height: "100%",
-                width: "99%",
+                width: "100%",
                 backdropFilter: "blur(1px)",
                 backgroundColor: "rgba(255, 255, 255, 0.5)",
                 borderRadius: "0.5rem",
@@ -130,6 +133,9 @@ const Rooms = () => {
               <Spinner />
             </div>
           )}
+      <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg pt-7">
+        <div className="container-fluid py-4 ">
+        
 
           {room && (
             <div className="row">
@@ -187,21 +193,20 @@ const Rooms = () => {
                       </div>
                     </div>
                   </div>
-                  <RoomCleaningsList roomId={room.id} cleanings={room?.room_cleanings}/>
+                  <RoomCleaningsList roomId={room.id} roomCleanings={room?.room_cleanings}/>
                 </div>
               </div>
-           
               <div className="col-lg-4 col-md-6" id="checkin">
                 {room && <CheckIn id={id} room={room} getRoomsInfo={getRoomsInfo} />}
                 <div style={{ marginTop: "20px" }} id="history">
-                  {room && id && <History id={room.id} />}
+                  {room && id && <History id={room.id} triger={triger} setTriger={setTriger} />}
                 </div>
                 {room && (
                   <div style={{ marginTop: "20px" }} id="actualizar">
                     <AmenitiesUpdate room={room} getRoomsInfo={getRoomsInfo} />
                   </div>
                 )}
-                  <RoomIssuesList getRoomsInfo={getRoomsInfo} roomId={room.id} room={room}/>
+                  <RoomIssuesList setTriger={setTriger} getRoomsInfo={getRoomsInfo} roomId={room.id} roomIssues={room.room_issues}/>
               </div>
 
 
@@ -210,6 +215,7 @@ const Rooms = () => {
         </div>
       </main>
     </div>
+
   );
 };
 

@@ -2,7 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import getConfig from '../../utils/getConfig'
 
-const History = ({ id }) => {
+const History = ({ id, triger, setTriger }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [history, setHistory] = useState([])
 
@@ -27,7 +27,29 @@ const History = ({ id }) => {
     if (id) {
       getRoomHistory(id)
     }
-  }, [id]);
+  }, [id, triger]);
+
+    // Cambiar el estado de un issue
+    const handleStatusChange = async (id, newStatus) => {
+      setIsLoading(true);
+      const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/issues/${id}`;
+      axios.patch(
+          URL,
+          { status: newStatus, resolvedAt: newStatus === "Resolved" ? new Date() : null },
+          getConfig()
+        )
+        .then((res) => {
+          setTriger((prev) => !prev);
+        })
+        .catch((err) => {
+          setIsLoading(false);
+          console.error("Error al actualizar el estado del problema:", err);
+          alert("No se pudo actualizar el estado del problema.");
+        });
+  
+    
+    };
+  
 
   // Función para obtener el color según el estado de la reserva
   const getReservationStatusColor = (status) => {
@@ -69,27 +91,42 @@ const History = ({ id }) => {
                     <i className="ni ni-bell-55 text-success text-gradient" />
                   ) : event.type === "ServiceReservation" ? (
                     <i className="fas fa-concierge-bell text-danger text-gradient" />
-                  ) : (
+                  )
+                  : event.type === "Cleaning" ? (
+                    <i className="fas fa-broom text-primary text-gradient text-danger" />
+                  ) 
+                  : (
                     <i className="ni ni-album-2 text-info text-gradient" />
                   )}
                 </span>
+
+                
+
+
                 <div className="timeline-content">
                   <h6 className="text-dark text-sm font-weight-bold mb-0">
                     {event.type === "Reservation"
                       ? `Reservada`
                       : event.type === "ServiceReservation"
                       ? `Servicio a la Habitación`
-                      : `Problema Reportado`}
+                       : event.type === "Cleaning"
+                      ? `Lmpieza`
+                      : `Problema Reportado ${event.status}`}
                   </h6>
                   <p className="text-secondary font-weight-bold text-xs mt-1 mb-0">
                     {event.date}
                   </p>
-                  <p className="text-sm mt-2">{event.description}</p>
+
+                  <p className="text-sm mt-2">{event.description}
+                  {event.type === "Issue" && event.status =="Resolved" && (
+                    <button className="btn btn-link text-warning  px-0 d-block" onClick={()=>handleStatusChange(event.data.id, 'Pending')}>Reactivar</button>
+                  )}
+                  </p>
 
                   {/* Mostrar el estado de la reserva con color */}
                   {event.type === "Reservation" && (
                     <p className={`text-sm font-weight-bold mt-2 ${getReservationStatusColor(event.status)}`}>
-                      {event.status}
+                      {event.status} 
                     </p>
                   )}
 

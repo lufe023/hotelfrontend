@@ -3,10 +3,10 @@ import axios from "axios";
 import getConfig from "../../utils/getConfig";
 import Spinner from "../spinner/Spinner";
 
-const RoomIssuesList = ({ room, roomId, getRoomsInfo }) => {
-  const [roomIssues, setRoomIssues] = useState(room.room_issues);
+const RoomIssuesList = ({ roomIssues, roomId, getRoomsInfo, setTriger }) => {
+
   const [isLoading, setIsLoading] = useState(false)
-  const [updatedIssue, setUpdatedIssue] = useState({status: "pending"});
+
   const [newIssue, setNewIssue] = useState({
     issueType: "",
     description: "",
@@ -20,7 +20,7 @@ const RoomIssuesList = ({ room, roomId, getRoomsInfo }) => {
       icon: "fas fa-snowflake text-info",
     },
     "Hot Water": { label: "Agua Caliente", icon: "fas fa-water text-primary" },
-    Leaking: { label: "Filtraciones", icon: "fas fa-tint text-danger" },
+    Leaking: { label: "Filtraciones", icon: "fas fa-tint text-blue" },
     Bathroom: { label: "Baño", icon: "fas fa-toilet text-secondary" },
     Other: { label: "Otro", icon: "fas fa-question-circle text-muted" },
   };
@@ -28,36 +28,26 @@ const RoomIssuesList = ({ room, roomId, getRoomsInfo }) => {
   // Cambiar el estado de un issue
   const handleStatusChange = async (id, newStatus) => {
     setIsLoading(true);
-  
-    // Guardar el estado anterior del issue
-    const previousIssues = [...roomIssues];
-    const previousIssue = previousIssues.find(issue => issue.id === id);
-  
-    try {
-      const res = await axios.patch(
-        `${import.meta.env.VITE_API_SERVER}/api/v1/issues/${id}`,
-        { status: newStatus },
+    const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/issues/${id}`;
+   axios.patch(
+        URL,
+        { status: newStatus, resolvedAt: newStatus === "Resolved" ? new Date() : null },
         getConfig()
-      );
+      )
+      .then((res) => {
+        setIsLoading(false);
+        getRoomsInfo(roomId);
+        setTriger((prev) => !prev);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.error("Error al actualizar el estado del problema:", err);
+        alert("No se pudo actualizar el estado del problema.");
+      });
+
   
-      setUpdatedIssue(res.data);
-      setIsLoading(false);
-  
-      // Actualizar el estado local con el issue actualizado
-      setRoomIssues((prevIssues) =>
-        prevIssues.map((issue) =>
-          issue.id === id ? { ...issue, status: res.data.status } : issue
-        )
-      );
-    } catch (error) {
-      setIsLoading(false);
-      console.error("Error al actualizar el estado del problema:", error);
-      alert("No se pudo actualizar el estado del problema.");
-  
-      // Revertir el estado del issue al estado anterior
-      setRoomIssues(previousIssues);
-    }
   };
+
   // Reportar un nuevo problema
   const handleReportIssue = async (e) => {
     e.preventDefault();
@@ -74,6 +64,7 @@ const RoomIssuesList = ({ room, roomId, getRoomsInfo }) => {
 
       // Limpiar el formulario
       setNewIssue({ issueType: "", description: "" });
+      setTriger((prev) => !prev);
     } catch (error) {
       console.error("Error al reportar un nuevo problema:", error);
       alert("No se pudo reportar el problema.");
