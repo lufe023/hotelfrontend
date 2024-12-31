@@ -31,13 +31,13 @@ const Navbar = () => {
     }
   return (
     <div className='top-0 z-index-sticky' 
-    style={{width:"100%", margin:'auto',  boxSizing: "border-box", paddingRight:"calc(var(--bs-gutter-x)* 1)", paddingLeft:"20px", marginBottom:"20px", position:'fixed'}}>
+    style={{ backdropFilter: "blur(15px)", width:"100%", margin:'auto',  boxSizing: "border-box", paddingRight:"calc(var(--bs-gutter-x)* 1)", paddingLeft:"20px", marginBottom:"20px", position:'fixed'}}>
     <nav className="navbar  navbar-main px-0   border-radius-xl  blur shadow-blur mt-4 "
     style={{width:"100vp", boxSizing: "border-box", marginRight:20,top: 0}}
     id="navbarBlur" navbar-scroll="true">
     <div className="container-fluid py-1 px-3" >
 
-      <div className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar" style={{minHeight: 40}}>
+      <div className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar" style={{minHeight: 50}}>
         <div className="ms-md-auto pe-md-3 d-flex align-items-center">
 
         </div>

@@ -37,8 +37,6 @@ const reservationData = {
   status,
 };
 
-    console.log("Datos de la reserva:", reservationData);
-
     const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/reservations`;
     axios
       .post(URL, reservationData, getConfig())

@@ -136,7 +136,6 @@ const Rooms = () => {
       <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg pt-7">
         <div className="container-fluid py-4 ">
         
-
           {room && (
             <div className="row">
               <div className="col-lg-8 col-md-6 mb-md-0 mb-4">
@@ -150,7 +149,7 @@ const Rooms = () => {
                           <i className="fas fa-pencil-alt me-2" /> Editar
                         </button>
                       </div>
-                      <h6 className={`mb-1 ${className}`}>Habitación #{room?.roomNumber} <span className='text-sm'>( {label} )</span></h6>
+                      <h6 className={`mb-1 ${className}`}>Habitación #{room?.roomNumber} <span className='text-xs'>( {label + " " +room?.pricePerNight } )</span></h6>
                       <p className="text-sm mb-0">
                         <i className="fas fa-map-marker-alt me-2"></i>{room?.ubication}
                       </p>
@@ -193,7 +192,7 @@ const Rooms = () => {
                       </div>
                     </div>
                   </div>
-                  <RoomCleaningsList roomId={room.id} roomCleanings={room?.room_cleanings}/>
+                  <RoomCleaningsList setTriger={setTriger} roomId={room.id} roomCleanings={room?.room_cleanings}/>
                 </div>
               </div>
               <div className="col-lg-4 col-md-6" id="checkin">
@@ -207,15 +206,13 @@ const Rooms = () => {
                   </div>
                 )}
                   <RoomIssuesList setTriger={setTriger} getRoomsInfo={getRoomsInfo} roomId={room.id} roomIssues={room.room_issues}/>
+
               </div>
-
-
             </div>
           )}
         </div>
       </main>
     </div>
-
   );
 };
 

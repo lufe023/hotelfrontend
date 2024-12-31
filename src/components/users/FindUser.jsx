@@ -41,7 +41,7 @@ const FindUser = ({ setResults, selectedUser}) => {
   return (
     <div>
       <div className="form-group">
-        <label htmlFor="exampleInputEmail1">Buscar un usuario</label>
+        <label htmlFor="exampleInputEmail1">Buscar persona</label>
         <input
           type="text"
           autoComplete="off"

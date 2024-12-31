@@ -164,7 +164,7 @@ useEffect(() => {
                       <Link to={`/room/${card.id}?action=pending`} className="dropdown-item border-radius-md">Reservaciones</Link>
                     </li>
                     <li>
-                    <Link to={`/room/${card.id}?action=cleaning`} className="dropdown-item border-radius-md">Solicitar limpieza</Link>
+                    <Link to={`/room/${card.id}?action=cleaning`} className="dropdown-item border-radius-md">Limpieza</Link>
                     </li>
                     <li>
                     <Link to={`/room/${card.id}?action=issue`} className="dropdown-item border-radius-md" href="#!">Problemas</Link>

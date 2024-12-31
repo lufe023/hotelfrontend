@@ -1,14 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import getConfig from "../../utils/getConfig";
+import Swal from "sweetalert2";
+import FindUser from "../users/FindUser";
 
-const RoomCleaningsList = ({ roomCleanings, roomId }) => {
+const RoomCleaningsList = ({setTriger, roomCleanings, roomId }) => {
+
+  const [selectedUser, setSelectedUser] = useState("");
+  const [results, setResults] = useState([]);
 
   const [newCleaning, setNewCleaning] = useState({
+    roomId,
     cleaningType: "",
     notes: "",
     cleaningDate: "",
+    userId: selectedUser?.id,
   });
+
+  useEffect(() => {
+
+    setNewCleaning((prev) => ({ ...prev, userId: selectedUser?.id }));
+  }, [selectedUser]);
 
   // Mapeo de tipos de limpiezas a traducciones e íconos
   const cleaningTypeMap = {
@@ -19,46 +31,77 @@ const RoomCleaningsList = ({ roomCleanings, roomId }) => {
 
   // Cambiar el estado de una limpieza
   const handleStatusChange = async (id, newStatus) => {
-    try {
-      const response = await axios.patch(
+    
+      axios.patch(
         `${import.meta.env.VITE_API_SERVER}/api/v1/cleanings/${id}`,
         { status: newStatus },
         getConfig()
-      );
-      const updatedCleaning = response.data;
+      )
+      .then((res) => {
+        if (res.status === 200) {
+                  Swal.fire({
+                    icon: "success",
+                    title: `Limpieza completada actualizado exitosamente`,
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                  });
+                }
+                setTriger((prev) => !prev);
+              })
+      .catch((err) => { 
+        console.error("Error al programar la limpieza:", err);
+        Swal.fire({
+          icon: "error",
+          title: `Hubo un error al actualizar el estado de la limpieza`,
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
 
-      // // Actualizar el estado local con la limpieza actualizada
-      // setRoomCleanings((prevCleanings) =>
-      //   prevCleanings.map((cleaning) =>
-      //     cleaning.id === id ? { ...cleaning, status: updatedCleaning.status } : cleaning
-      //   )
-      // );
-    } catch (error) {
-      console.error("Error al actualizar el estado de la limpieza:", error);
-      alert("No se pudo actualizar el estado de la limpieza.");
-    }
+      });
   };
 
   // Programar una nueva limpieza
   const handleScheduleCleaning = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await axios.post(
+    console.log(newCleaning)
+    axios.post(
         `${import.meta.env.VITE_API_SERVER}/api/v1/cleanings`,
-        { ...newCleaning, roomId }, // Agregar roomId al cuerpo de la solicitud
+        newCleaning, // Agregar roomId al cuerpo de la solicitud
         getConfig()
-      );
+      )
+      .then((res) => {
+        if (res.status === 200) {
+                  Swal.fire({
+                    icon: "success",
+                    title: `Se ha agendado una nueva limpieza`,
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                  });
+                }
+        setTriger((prev) => !prev);
+        })
+        .catch((err) => { 
+          console.error("Error al programar la limpieza:", err);
+          Swal.fire({
+            icon: "error",
+            title: `Hubo un error creando la limpieza`,
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+          });
 
-      // Actualizar la lista de limpiezas localmente con la nueva limpieza
-      setRoomCleanings((prevCleanings) => [...prevCleanings, response.data]);
-
-      // Limpiar el formulario
-      setNewCleaning({ cleaningType: "", notes: "", cleaningDate: "" });
-    } catch (error) {
-      console.error("Error al programar una nueva limpieza:", error);
-      alert("No se pudo programar la limpieza.");
-    }
+        });
   };
 
   return (
@@ -112,6 +155,14 @@ const RoomCleaningsList = ({ roomCleanings, roomId }) => {
                         : "Pendiente"}
                     </span>
                   </span>
+   
+                  <span className="mb-2 text-xs">
+                    <strong>Asignado a:</strong>{" "}
+                    <span className="text-dark font-weight-bold ms-sm-2">
+                      {cleaning.cleanedBy.firstName || "Sin asignar"}
+                    </span>
+                  </span>
+                  
                 </div>
 
                 {/* Botones de Acción */}
@@ -140,6 +191,28 @@ const RoomCleaningsList = ({ roomCleanings, roomId }) => {
         <div className="mt-4">
           <h6 className="mb-3">Programar una nueva limpieza</h6>
           <form onSubmit={handleScheduleCleaning}>
+          <div className=" mb-3">
+                <FindUser setResults={setResults} selectedUser={selectedUser}/>
+                <ul className="list-group shadow-sm">
+                {results?.map((user)=>(
+                <li key={user.id} className={`list-group-item border-0 d-flex align-items-center px-2 mb-2 ${selectedUser===user?'bg-primary':''}`}>
+                <div className="avatar me-3">
+                <img
+  src={user.picture || `${import.meta.env.VITE_API_SERVER}/api/v1/images/images/nobody.jpg`}
+  alt="Avatar del usuario"
+  className="border-radius-lg shadow"
+/>
+                </div>
+                <div className="d-flex align-items-start flex-column justify-content-center">
+                  <h6 className="mb-0 text-sm">{user.firstName}</h6>
+                  <p className="mb-0 text-xs">{user.phone}</p>
+                </div>
+              <a className="btn btn-link pe-3 ps-0 mb-0 ms-auto" onClick={()=>setSelectedUser(user)}>Seleccionar</a>
+              </li>
+                ))}
+                </ul>
+            </div>
+
             <div className="mb-3">
               <label htmlFor="cleaningType" className="form-label">
                 Tipo de Limpieza

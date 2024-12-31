@@ -54,7 +54,7 @@ const Aside = () => {
       <span className="ms-1 d-block font-weight-light">El Oasis del Sur</span>
     </a>
   </div>
-  <hr className="horizontal dark mt-0" />
+  <hr className="horizontal dark mt-4" />
 
   <div className="collapse navbar-collapse w-auto scroll " id="sidenav-collapse-main" >
   {/* <div className="collapse navbar-collapse w-auto ps  ps--scrolling-y" id="sidenav-collapse-main"> */}

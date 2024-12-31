@@ -29,7 +29,7 @@ const PendingReservations = ({ reservations }) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     date.setMinutes(date.getMinutes() + date.getTimezoneOffset()); // Ajuste manual
-    return format(date, "dd 'de' MMMM 'de' yyyy", { locale: es });
+    return format(date, "dd '-' MM ' -' yyyy", { locale: es });
   };
 
   return (
@@ -39,26 +39,24 @@ const PendingReservations = ({ reservations }) => {
           <h6>Reservaciones Pendientes </h6>
         </div>
         <div className="card-body px-0 pt-0 pb-2">
-          <div className="table-responsive p-0" style={{minHeight:250}}>
-            <table className="table align-items-center mb-0">
+          <div className="table-responsive p-0" style={{minHeight:300}}>
+            <table className="table align-items-center mb-0 table-hover">
               <thead>
                 <tr>
                   <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                     Usuario
                   </th>
                   <th className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                    Check-In
+                    Estadía
                   </th>
-                  <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                    Check-Out
-                  </th>
+                  
                   <th className="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                     Estado
                   </th>
                   <th
-                    className="text-secondary opacity-7"
+                    className="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"
                     style={{ width: 20 }}
-                  />
+                  >Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -79,15 +77,29 @@ const PendingReservations = ({ reservations }) => {
                         </div>
                       </div>
                     </td>
-                    <td className="align-middle text-center">
-                      <span className="text-secondary text-xs font-weight-bold">
-                        {formatDate(reservation.checkIn)}
-                      </span>
-                    </td>
-                    <td className="align-middle text-center">
-                      <span className="text-secondary text-xs font-weight-bold">
-                        {formatDate(reservation.checkOut)}
-                      </span>
+                    <td className="text-sm">
+                    <div className="d-flex px-2 py-1 ">
+
+                        <div className="col-4 text-right" >
+
+                          <small className='d-block' >Entrada: </small>
+                          <small className='d-block'>Salida: </small>
+
+                        </div>
+
+                        <div className="col-8 text-left">
+
+                          <small className="text-secondary  font-weight-bold d-block">
+                            {formatDate(reservation.checkIn)}
+                          </small>
+                                          
+                          <small className="text-secondary  font-weight-bold d-block">
+                          {formatDate(reservation.checkOut)}
+                          </small>
+
+                        </div>
+                      </div>
+
                     </td>
                     <td className="align-middle text-center text-sm">
                       <span className="badge badge-sm bg-gradient-warning">
