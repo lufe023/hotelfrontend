@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import getConfig from "../../utils/getConfig";
 
 const RoomDetailsUpdate = ({ room, getRoomsInfo, setEditing }) => {
+  const [areas, setAreas] = useState()
   const [details, setDetails] = useState({
     roomNumber: "",
     roomType: "",
@@ -12,6 +13,16 @@ const RoomDetailsUpdate = ({ room, getRoomsInfo, setEditing }) => {
     description: "",
   });
   const [originalDetails, setOriginalDetails] = useState({}); // Para restaurar en caso de cancelar
+
+  const getAreas = ()=> {
+    const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/areas`;
+    axios
+        .get(URL, getConfig())
+        .then((res) => {
+          setAreas(res.data);
+        })
+        .catch((err) => console.log(err));
+  }
 
   useEffect(() => {
     if (room) {
@@ -25,6 +36,7 @@ const RoomDetailsUpdate = ({ room, getRoomsInfo, setEditing }) => {
       setDetails(roomData);
       setOriginalDetails(roomData); // Guardamos el estado original
     }
+    getAreas()
   }, [room]);
 
   const handleInputChange = (field, value) => {
@@ -111,13 +123,15 @@ const RoomDetailsUpdate = ({ room, getRoomsInfo, setEditing }) => {
           </div>
           <div className="form-group mb-3">
             <label htmlFor="ubication" className="form-label">Ubicación</label>
-            <input
-              type="text"
-              id="ubication"
-              className="form-control"
-              value={details.ubication}
-              onChange={(e) => handleInputChange("ubication", e.target.value)}
-            />
+            <select className="form-control"  onChange={(e) => handleInputChange("ubication", e.target.value)}>
+              {console.log(areas)}
+            {
+              areas?.rows?.map((ubication)=>
+              <option selected={room.ubication ==ubication.id?true:false } key={ubication.id} value={ubication.id}>{ubication.name}</option>
+              )
+            }
+            </select>
+
           </div>
           <div className="form-group">
             <label htmlFor="description" className="form-label">Descripción</label>

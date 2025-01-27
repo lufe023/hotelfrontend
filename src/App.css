@@ -11,3 +11,13 @@ transition: all 0.1s;
     transition: transform 0.2s ease-in-out; /* Duración y suavizado de la animación */
 
   }
+
+  .no-border:focus {
+    border: none;
+    outline: none;
+  }
+
+  .no-border {
+    border: none;
+    outline: none;
+  }

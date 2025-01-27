@@ -41,13 +41,12 @@ const FindUser = ({ setResults, selectedUser}) => {
   return (
     <div>
       <div className="form-group">
-        <label htmlFor="exampleInputEmail1">Buscar persona</label>
         <input
           type="text"
           autoComplete="off"
           className="form-control"
           id="exampleInputEmail1"
-          placeholder="Nombre, apellido o teléfono"
+          placeholder="Buscar persona por Nombre, apellido o teléfono"
           onChange={(e) => findingWord(e.target.value)}
         />
       </div>

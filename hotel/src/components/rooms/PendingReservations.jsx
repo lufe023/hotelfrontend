@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale'; // Importación directa de la localización
+import axios from 'axios';
+import getConfig from '../../utils/getConfig';
 
 const PendingReservations = ({ reservations }) => {
   const [openDropdown, setOpenDropdown] = useState();
@@ -31,6 +33,17 @@ const PendingReservations = ({ reservations }) => {
     date.setMinutes(date.getMinutes() + date.getTimezoneOffset()); // Ajuste manual
     return format(date, "dd 'de' MMMM 'de' yyyy", { locale: es });
   };
+
+  // const handleUpdateReservation = (id) => {
+  //   const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/rooms/${id}`;
+  //   axios
+  //       .patch(URL, getConfig())
+  //       .then((res) => {
+  //         setRoom(res.data)
+            
+  //       })
+  //       .catch((err) => console.log(err));
+  // }; 
 
   return (
     <div className="col-12">
@@ -62,89 +75,6 @@ const PendingReservations = ({ reservations }) => {
                 </tr>
               </thead>
               <tbody>
-                {reservations?.map((reservation) => (
-                  <tr key={reservation.id}>
-                    <td>
-                      <div className="d-flex px-2 py-1">
-                        <div className="d-flex flex-column justify-content-center">
-                          <h6 className="mb-0 text-sm">
-                            {reservation.user.firstName} {reservation.user.lastName}
-                          </h6>
-                          <p className="text-xs text-secondary mb-0">
-                            {reservation.user.email}
-                          </p>
-                          <p className="text-xs text-secondary mb-0">
-                            {reservation.user.phone}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="align-middle text-center">
-                      <span className="text-secondary text-xs font-weight-bold">
-                        {formatDate(reservation.checkIn)}
-                      </span>
-                    </td>
-                    <td className="align-middle text-center">
-                      <span className="text-secondary text-xs font-weight-bold">
-                        {formatDate(reservation.checkOut)}
-                      </span>
-                    </td>
-                    <td className="align-middle text-center text-sm">
-                      <span className="badge badge-sm bg-gradient-warning">
-                        {reservation.status}
-                      </span>
-                    </td>
-                    <td className="align-middle">
-                      <a
-                        className="cursor-pointer"
-                        onClick={() => toggleDropdown(reservation.id)}
-                      >
-                        <i className="fa fa-ellipsis-h text-dark"></i>
-                      </a>
-                      <div className="dropdown mb-3">
-                        {openDropdown === reservation.id && (
-                          <ul
-                            className="dropdown-menu px-2 py-3 show"
-                            style={{
-                              position: 'absolute',
-                              top: -50,
-                              left: -155,
-                              zIndex: 1,
-                              backgroundColor: 'white',
-                              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-                              borderRadius: '4px',
-                            }}
-                          >
-                            <li>
-                              <Link
-                                className="dropdown-item border-radius-md"
-                                to={`/room/`}
-                              >
-                                Aprobar sin avisar
-                              </Link>
-                            </li>
-                            <li>
-                              <Link
-                                className="dropdown-item border-radius-md"
-                                to={`/room/`}
-                              >
-                                Aprobar y avisar
-                              </Link>
-                            </li>
-                            <li>
-                              <Link
-                                className="dropdown-item border-radius-md"
-                                to={`/room/`}
-                              >
-                                Cancelar
-                              </Link>
-                            </li>
-                          </ul>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
               </tbody>
             </table>
           </div>

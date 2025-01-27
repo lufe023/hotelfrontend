@@ -13,8 +13,10 @@ import Rooms from './components/rooms/Rooms';
 import SeePictures from './components/gallery/SeePictures';
 import CheckIn from './components/dashboard/CheckIn';
 import ScrollToHash from './utils/ScrollToHash';
-import Chats from './components/users/Chats';
 import AllChats from './components/users/AllChats';
+import Admin from './components/administrator/adminUtils/Admin';
+import ProtectedAdmin from './components/administrator/adminUtils/ProtectedAdmin';
+import PuntoDeVenta from './components/PuntoDeVenta/PuntoDeVenta';
 
 function App() {
 
@@ -29,20 +31,24 @@ function App() {
 
     <ScrollToHash />
     <Routes>
-    <Route path='/login' element={<Login />} />
-    <Route path='logout' element={<LogOut/>} />
-    <Route path='*' element={<Error404/>}/>
+      <Route path='/login' element={<Login />} />
+      <Route path='logout' element={<LogOut/>} />
+      <Route path='*' element={<Error404/>}/>
     
-    <Route element={<ProtectedRoutes />}>
-            <Route path='/' element={<AppLayout />} />
-            <Route path='/dashboard' element={<AppLayout />} />
-            <Route path='/room/:id' element={<Rooms />} />
-            <Route path='/chats' element={<Chats />} />
-            <Route path='/support' element={<AllChats />} />
-            <Route path='/support/:id' element={<AllChats />} />
-            <Route path='/gallerys' element={<SeePictures />} />
-            <Route path='/prepare-checking/:id' element={<CheckIn/>}/>
-          </Route>
+      <Route element={<ProtectedRoutes />}>
+        <Route path='/' element={<AppLayout />} />
+        <Route path='/dashboard' element={<AppLayout />} />
+        <Route path='/room/:id' element={<Rooms />} />
+        <Route path='/support' element={<AllChats />} />
+        <Route path='/support/:id' element={<AllChats />} />
+        <Route path='/gallerys' element={<SeePictures />} />
+        <Route path='/prepare-checking/:id' element={<CheckIn/>}/>
+        <Route path='/ventas' element={<PuntoDeVenta/>} />
+      </Route>
+
+      <Route element={<ProtectedAdmin />}>
+      <Route path='/admin' element={<Admin/>} />
+      </Route>
 
     </Routes>
     </>

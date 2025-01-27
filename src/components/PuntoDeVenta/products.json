@@ -1,0 +1,153 @@
+[
+    {
+      "id": 1,
+      "nombre": "Bebida Cola",
+      "precio": 3.5,
+      "codigoBarra": "7501001234561"
+    },
+    {
+      "id": 2,
+      "nombre": "Hamburguesa",
+      "precio": 5.99,
+      "codigoBarra": "7501002234562"
+    },
+    {
+      "id": 3,
+      "nombre": "Papas Fritas",
+      "precio": 2.99,
+      "codigoBarra": "7501003234563"
+    },
+    {
+      "id": 4,
+      "nombre": "Agua Mineral",
+      "precio": 1.5,
+      "codigoBarra": "7501004234564"
+    },
+    {
+      "id": 5,
+      "nombre": "Ensalada Cesar",
+      "precio": 4.99,
+      "codigoBarra": "7501005234565"
+    },
+    {
+      "id": 6,
+      "nombre": "Servicio de Spa",
+      "precio": 50.0,
+      "codigoBarra": "7501006234566"
+    },
+    {
+      "id": 7,
+      "nombre": "Corte de Cabello",
+      "precio": 15.0,
+      "codigoBarra": "7501007234567"
+    },
+    {
+      "id": 8,
+      "nombre": "Manicura",
+      "precio": 25.0,
+      "codigoBarra": "7501008234568"
+    },
+    {
+      "id": 9,
+      "nombre": "Pedicura",
+      "precio": 30.0,
+      "codigoBarra": "7501009234569"
+    },
+    {
+      "id": 10,
+      "nombre": "Lavado de Auto",
+      "precio": 20.0,
+      "codigoBarra": "7501010234570"
+    },
+    {
+      "id": 11,
+      "nombre": "Cambio de Aceite",
+      "precio": 35.0,
+      "codigoBarra": "7501011234571"
+    },
+    {
+      "id": 12,
+      "nombre": "Torta de Chocolate",
+      "precio": 8.99,
+      "codigoBarra": "7501012234572"
+    },
+    {
+      "id": 13,
+      "nombre": "Café Espresso",
+      "precio": 2.5,
+      "codigoBarra": "7501013234573"
+    },
+    {
+      "id": 14,
+      "nombre": "Sandwich de Jamón",
+      "precio": 4.5,
+      "codigoBarra": "7501014234574"
+    },
+    {
+      "id": 15,
+      "nombre": "Pizza Familiar",
+      "precio": 12.99,
+      "codigoBarra": "7501015234575"
+    },
+    {
+      "id": 16,
+      "nombre": "Laptop HP",
+      "precio": 700.0,
+      "codigoBarra": "7501016234576"
+    },
+    {
+      "id": 17,
+      "nombre": "Mouse Inalámbrico",
+      "precio": 25.0,
+      "codigoBarra": "7501017234577"
+    },
+    {
+      "id": 18,
+      "nombre": "Teclado Mecánico",
+      "precio": 80.0,
+      "codigoBarra": "7501018234578"
+    },
+    {
+      "id": 19,
+      "nombre": "Audífonos Bluetooth",
+      "precio": 50.0,
+      "codigoBarra": "7501019234579"
+    },
+    {
+      "id": 20,
+      "nombre": "Monitor LED 24''",
+      "precio": 200.0,
+      "codigoBarra": "7501020234580"
+    },
+    {
+      "id": 21,
+      "nombre": "Zapatos Deportivos",
+      "precio": 120.0,
+      "codigoBarra": "7501021234581"
+    },
+    {
+      "id": 22,
+      "nombre": "Camiseta Casual",
+      "precio": 25.0,
+      "codigoBarra": "7501022234582"
+    },
+    {
+      "id": 23,
+      "nombre": "Pantalón de Mezclilla",
+      "precio": 45.0,
+      "codigoBarra": "7501023234583"
+    },
+    {
+      "id": 24,
+      "nombre": "Chaqueta de Cuero",
+      "precio": 150.0,
+      "codigoBarra": "7501024234584"
+    },
+    {
+      "id": 25,
+      "nombre": "Reloj Inteligente",
+      "precio": 300.0,
+      "codigoBarra": "7501025234585"
+    }
+  ]
+  

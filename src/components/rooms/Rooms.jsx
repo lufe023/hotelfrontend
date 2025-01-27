@@ -110,10 +110,7 @@ const Rooms = () => {
   const { className, label } = statusClass(room?.status || "");
 
   return (
-
- 
     <div className={`g-sidenav-show ${isPinned ? "g-sidenav-pinned" : ""}`}>
-       
       <Aside />
         <Navbar />
         {isLoading && (
@@ -151,7 +148,8 @@ const Rooms = () => {
                       </div>
                       <h6 className={`mb-1 ${className}`}>Habitación #{room?.roomNumber} <span className='text-xs'>( {label + " " +room?.pricePerNight } )</span></h6>
                       <p className="text-sm mb-0">
-                        <i className="fas fa-map-marker-alt me-2"></i>{room?.ubication}
+                        {console.log(room)}
+                        <i className="fas fa-map-marker-alt me-2"></i>{room?.areas.name}
                       </p>
                     </div>
                   )}
@@ -174,8 +172,8 @@ const Rooms = () => {
                     </div>
                   </div>
                 </div>
-                {room?.reservations?.length > 0 && <PendingReservations reservations={room.reservations} />}
-                <div className="row" id='gallery' style={{ marginTop: 20 }}>
+                {room?.reservations?.length > 0 && <PendingReservations setTriger={setTriger} reservations={room.reservations} />}
+                <div className="" id='gallery' style={{ marginTop: 20 }}>
                   <div>
                     <div className="card rounded-4 shadow-sm">
                       <div className="card-body">

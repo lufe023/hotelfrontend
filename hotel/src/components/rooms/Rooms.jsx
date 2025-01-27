@@ -22,7 +22,6 @@ const {id} = useParams()
   const [editing, setEditing] = useState(false)
 
   const getRoomsInfo = (id) => {
-    // const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/summary/rooms?ubication=${param}`;
     setIsLoading(true)
     const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/rooms/${id}`;
     axios
@@ -34,7 +33,6 @@ const {id} = useParams()
         .catch((err) => console.log(err));
   }
 
-  
   useEffect(() => {
     getRoomsInfo(id)
   }, [])
@@ -289,7 +287,7 @@ const {id} = useParams()
 </div>
   
 {
-  room?.reservations?.length > 0 && (<PendingReservations reservations={room.reservations}/>)
+  room?.reservations?.length > 0 && (<PendingReservations setTriger={set} reservations={room?.reservations}/>)
  }
 <div className="row" style={{marginTop:20}}>
       <div >

@@ -36,6 +36,20 @@ export const Notifications = () => {
   const toggleDropdown = () => setOpenDropdown(!openDropdown);
 
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape' && openDropdown) {
+        setOpenDropdown(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [openDropdown]);
+  
   // Función para manejar nuevas notificaciones
   const handleNewNotification = (data) => {
     // Obtener los detalles del tipo de notificación, o usar 'default' si no existe

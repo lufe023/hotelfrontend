@@ -27,7 +27,6 @@ const SeePictures = () => {
         fetchGalleries();
       }, []);
       
-      console.log(galleries)
   return (
     <div className={`g-sidenav-show  ${isPinned ? 'g-sidenav-pinned' : ''}`}>
     <Aside/>

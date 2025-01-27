@@ -2,12 +2,36 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale'; // Importación directa de la localización
+import axios from 'axios';
+import getConfig from '../../utils/getConfig';
+import Swal from 'sweetalert2';
 
-const PendingReservations = ({ reservations }) => {
+const PendingReservations = ({ reservations, setTriger }) => {
   const [openDropdown, setOpenDropdown] = useState();
 
   const toggleDropdown = (id) => {
     setOpenDropdown((prev) => (prev === id ? null : id));
+  };
+
+  const getStatusBadgeClass = (status) => {
+    switch (status) {
+      case "Pending":
+        return "bg-gradient-warning";
+      case "Approved":
+        return "bg-gradient-success";
+      case "Rejected":
+        return "bg-gradient-danger";
+      case "Cancelled":
+        return "bg-gradient-secondary";
+      case "Completed":
+        return "bg-gradient-primary";
+      case "No show":
+        return "bg-gradient-dark";
+      case "Expired":
+        return "bg-gradient-info";
+      default:
+        return "bg-gradient-warning";
+    }
   };
 
   const handleClickOutside = (event) => {
@@ -32,8 +56,31 @@ const PendingReservations = ({ reservations }) => {
     return format(date, "dd '-' MM ' -' yyyy", { locale: es });
   };
 
+  const handleStatusChange = (id, data) => {
+    // Aquí se haría la petición al servidor para cambiar el estado de la reserva
+    const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/reservations/${id}`;
+    axios
+      .patch(URL, data,getConfig())
+      .then((res) => {
+        if (res.status === 200) {
+                  Swal.fire({
+                    icon: "success",
+                    title: `se ha enviado un mensaje al cliente con la actualización de la reserva`,
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                  });
+                }
+                setTriger((prev) => !prev);
+      })
+      .catch((err) =>{
+        console.log(err)});
+  };
+
   return (
-    <div className="col-12" id='pending'>
+    <div className="" id='pending'>
       <div className="card mb-4">
         <div className="card-header pb-0">
           <h6>Reservaciones Pendientes </h6>
@@ -66,13 +113,13 @@ const PendingReservations = ({ reservations }) => {
                       <div className="d-flex px-2 py-1">
                         <div className="d-flex flex-column justify-content-center">
                           <h6 className="mb-0 text-sm">
-                            {reservation.user.firstName} {reservation.user.lastName}
+                            {reservation.guest.firstName} {reservation.guest.lastName}
                           </h6>
                           <p className="text-xs text-secondary mb-0">
-                            {reservation.user.email}
+                            {reservation.guest.email}
                           </p>
                           <p className="text-xs text-secondary mb-0">
-                            {reservation.user.phone}
+                            {reservation.guest.phone}
                           </p>
                         </div>
                       </div>
@@ -102,9 +149,9 @@ const PendingReservations = ({ reservations }) => {
 
                     </td>
                     <td className="align-middle text-center text-sm">
-                      <span className="badge badge-sm bg-gradient-warning">
-                        {reservation.status}
-                      </span>
+                      <span className={`badge badge-sm ${getStatusBadgeClass(reservation.status)}`}>
+            {reservation.status}
+          </span>
                     </td>
                     <td className="align-middle">
                       <a
@@ -128,28 +175,54 @@ const PendingReservations = ({ reservations }) => {
                             }}
                           >
                             <li>
-                              <Link
+                              <button
                                 className="dropdown-item border-radius-md"
-                                to={`/room/`}
-                              >
-                                Aprobar sin avisar
-                              </Link>
-                            </li>
-                            <li>
-                              <Link
-                                className="dropdown-item border-radius-md"
-                                to={`/room/`}
+                                onClick={(()=>handleStatusChange(reservation.id, {status:'Approved', announce:true}))}
                               >
                                 Aprobar y avisar
-                              </Link>
+                              </button>
                             </li>
                             <li>
-                              <Link
+                              <button
                                 className="dropdown-item border-radius-md"
-                                to={`/room/`}
+                                onClick={(()=>handleStatusChange(reservation.id, {status:'Approved', announce:false}))}
                               >
-                                Cancelar
-                              </Link>
+                                Aprobar y sin Avisar
+                              </button>
+                            </li>
+
+                            <li>
+                              <button
+                                className="dropdown-item border-radius-md"
+                                onClick={(()=>handleStatusChange(reservation.id, {status:'Pending', announce:true}))}
+                              >
+                                Pendiente
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="dropdown-item border-radius-md"
+                                onClick={(()=>handleStatusChange(reservation.id, {status:'Pending', announce:false}))}
+                              >
+                                Pendiente sin Avisar
+                              </button>
+                            </li>
+
+                            <li>
+                              <button
+                                className="dropdown-item border-radius-md"
+                                onClick={(()=>handleStatusChange(reservation.id, {status:'Cancelled', announce:true}))}
+                              >
+                                Cancellar
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="dropdown-item border-radius-md"
+                                onClick={(()=>handleStatusChange(reservation.id, {status:'Cancelled', announce:false}))}
+                              >
+                                Cancellar sin Avisar
+                              </button>
                             </li>
                           </ul>
                         )}

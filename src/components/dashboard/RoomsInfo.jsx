@@ -12,10 +12,9 @@ const RoomsInfo = () => {
     const [allData, setAllData] = useState()
     const [allUbications, setAllUbications] = useState([])
     const [summary, setSummary] = useState()
-    const getRoomsInfo = (param) => {
+    const getRoomsInfo = (param = '') => {
       // const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/summary/rooms?ubication=${param}`;
       setIsLoading(true)
-
       const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/summary/rooms?ubication=${param}`;
       axios
           .get(URL, getConfig())
@@ -25,6 +24,7 @@ const RoomsInfo = () => {
               setAllUbications(res.data.allUbications)
               setIsLoading(false)
 
+
           })
           .catch((err) => console.log(err));
   
@@ -33,7 +33,6 @@ const RoomsInfo = () => {
 useEffect(() => {
   getRoomsInfo(ubication)
 }, [ubication])
-
 
  const toggleDropdown = (id) => {
     setOpenDropdown((prev) => (prev === id ? null : id));
@@ -78,15 +77,16 @@ useEffect(() => {
       <div className="card mb-4">
       <div className="card-header pb-0 p-3">
       <h6 className="mb-1">Habitaciones</h6>
-      <p className="text-sm">{ubication}</p>
+      <p className="text-sm">{ubication.name}</p>
     </div>
     <div className="card-body p-3">
       <div className='d-flex gap-2 align-items-end' style={{flexWrap:'wrap'}}>
       <button onClick={()=>setUbication('')} className={`btn ${ubication==''?'btn-primary':'btn-secondary'} `} type="button">Todos</button>
-      {allUbications?.map((botton, index)=>
-      <button key={index}  onClick={()=>setUbication(botton)} className={`btn ${ubication==botton?'btn-primary':'btn-secondary'} `} type="button">{botton}</button>
+{allUbications?.map((botton, index)=>
+      <button key={index}  onClick={()=>setUbication(botton.id)} className={`btn ${ubication.id==botton.id?'btn-primary':'btn-secondary'} `} type="button">{botton.name}</button>
       )
       }
+      
     </div>
     </div>
   </div>
@@ -113,15 +113,13 @@ useEffect(() => {
 }
   <div className="row my-4">
 
-    <div className="col-lg-8">
-<div className="row">
-
-
-
+    <div className="col-lg-8 scroll   border-radius-lg p-3" style={{maxHeight: '80vh', overflowY: 'auto'}}>
+    {/* <hr className='vertical dark mt-4 '/>  */}
+<div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
 {cards?.map((card) => {
   const { className, label } = statusClass(card.status);
   return (
-    <div key={card.id} className="col-md-4 col-4 col-12 mb-4">
+    <div key={card.id} className="col-md-4 col-4 col-12 mb-4 ">
       <div className={`card ${className}`}>
 
         <span className={`mask ${className} opacity-10 border-radius-lg`}></span>
@@ -153,7 +151,7 @@ useEffect(() => {
                   <i className="fa fa-ellipsis-h text-white"/>
                 </a>
                 {openDropdown === card.id && (
-                  <ul className="dropdown-menu px-1 py-2 show" style={{right:"0px"}}>
+                  <ul className="dropdown-menu px-1 py-2 show shadow">
                     <li>
                       <Link className="dropdown-item border-radius-md" to={`/room/${card.id}`}>Ver detalles</Link>
                     </li>
@@ -184,14 +182,21 @@ useEffect(() => {
   );
 })}
 
-</div>   
+</div>  
+
 </div>
+
 <div className="col-lg-4">
     <div className="row">
     <div className=" col-12 mt-4 mt-lg-0">
           <div className="card shadow h-100">
             <div className="card-header pb-0 p-3">
-              <h6 className="mb-0">{!ubication?"Todas":ubication}<span className="me-2 text-sm font-weight-light"> Informe</span></h6>
+              <h6 className="mb-0">
+  {!ubication
+    ? "Todas"
+    : allUbications.filter((ubi) => ubi.id === ubication)[0]?.name || "No encontrada"}
+  <span className="me-2 text-sm font-weight-light"> Informe</span>
+</h6>
             </div>
             <div className="card-body pb-0 p-3">
               <ul className="list-group">
