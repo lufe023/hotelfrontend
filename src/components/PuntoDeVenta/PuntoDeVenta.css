@@ -1,0 +1,11 @@
+.scrollHorizontal {
+    cursor: grab;
+  }
+  
+  .scrollHorizontal.grabbing {
+    cursor: grabbing;
+  }
+  
+  button.grabbing {
+    cursor: grabbing !important;
+  }

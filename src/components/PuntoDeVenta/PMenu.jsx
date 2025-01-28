@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useMenu,} from '../../utils/MenuContext'
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import React, { } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import { Notifications } from '../Navbar/Notifications';
@@ -9,7 +8,7 @@ import FechaHora from './utils/FechaHora ';
 
 
 const PMenu = ({busqueda, setBusqueda}) => {
-  const { toggleMenu, setIsPinned, isPinned} = useMenu();
+
   const navigate = useNavigate();
   const user = useSelector(state => state.userSlice);
 
@@ -31,13 +30,11 @@ const PMenu = ({busqueda, setBusqueda}) => {
       });
     }
   return (
-    <div className='top-0 z-index-sticky' 
-    style={{ backdropFilter: "blur(15px)", width:"100%", margin:'auto',  boxSizing: "border-box", paddingRight:"calc(var(--bs-gutter-x)* 1)", paddingLeft:"20px", marginBottom:"20px", position:'fixed'}}>
-    <nav className="navbar  navbar-main px-0   border-radius-xl  blur shadow-blur mt-4 "
-    style={{width:"100vp", boxSizing: "border-box", marginRight:20,top: 0}}
+  <div>
+    <nav className="navbar  navbar-main px-0  blur shadow-blur "
+    style={{width:"100vp", boxSizing: "border-box", top: 0}}
     id="navbarBlur" navbar-scroll="true">
     <div className="container-fluid" >
-
     <nav 
   aria-label="breadcrumb" 
   className="d-none d-md-block" 
@@ -46,21 +43,20 @@ const PMenu = ({busqueda, setBusqueda}) => {
   <FechaHora />
 </nav>
       <div className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4 align-items-left" id="navbar" style={{minHeight: 50, display: "flex", justifyContent: "space-between", width: "80%"}}>
-      <div className="ms-md-3" style={{width:"60%"}}>
+      <div className="ms-md-3" style={{ width: "100%" }}>
   <input
     type="text"
-    className="form-control flex-grow-1"
+    className="form-control w-100"
     placeholder="Buscar por nombre o código de barras"
     value={busqueda}
     onChange={(e) => setBusqueda(e.target.value)}
   />
 </div>
         <ul className="navbar-nav  justify-content-end">
-        
-          <li className="nav-item d-flex align-items-center">
+          <li className="nav-item  d-flex align-items-center text-nowrap pl-2" >
             <Link  className="nav-link text-body font-weight-bold px-0">
               <i className="fa fa-user me-sm-1" />
-              <span className="d-sm-inline d-none">{user?.firstName}</span>
+              <span className="d-sm-inline d-none ">{user?.firstName}</span>
             </Link>
           </li>
       

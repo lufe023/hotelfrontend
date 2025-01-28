@@ -3,8 +3,8 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import getConfig from "../../utils/getConfig";
 
-const OpcionesPOS = ({ total, cliente, setCliente }) => {
-  const [metodoPago, setMetodoPago] = useState("Efectivo");
+const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago }) => {
+  //const [metodoPago, setMetodoPago] = useState("Efectivo");
   const [cambio, setCambio] = useState(0);
   const [facturasPendientes, setFacturasPendientes] = useState([
     { id: 1, total: 1200 },
