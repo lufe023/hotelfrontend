@@ -1,0 +1,13 @@
+{
+    "icons": {
+      "Comida Rápida": "fas fa-hamburger",
+      "Comida Italiana": "fas fa-pizza-slice",
+      "Ensaladas": "fas fa-seedling",
+      "Comida Japonesa": "fas fa-fish",
+      "Comida Mexicana": "fas fa-pepper-hot",
+      "Bebidas Calientes": "fas fa-mug-hot",
+      "Bebidas Frias": "fas fa-glass-whiskey",
+      "Postres": "fas fa-ice-cream",
+      "Sándwiches": "fas fa-bread-slice"
+    }
+  }

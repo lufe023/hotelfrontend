@@ -5,7 +5,7 @@ const FechaHora = () => {
   const options = {
     weekday: 'long',
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
   };
   
@@ -21,10 +21,13 @@ const FechaHora = () => {
   const formatoHora = fechaHora.toLocaleTimeString(); // Formato de la hora
 
   return (
-    <div style={{ textAlign: "center", fontSize: "14px"}}>
-    <strong>
-    {formatoFecha} | {formatoHora}
+    <div style={{ textAlign: "left", fontSize: "14px"}}>
+      <strong>
+    {formatoHora}
     </strong>
+    <br />
+    {formatoFecha} 
+ 
 
     </div>
   );

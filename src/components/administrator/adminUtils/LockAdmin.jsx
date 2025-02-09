@@ -67,7 +67,7 @@ if(user?.firstName=="Cargando"){
                     toast.addEventListener('mouseleave', Swal.resumeTimer)
                   }
                 })
-                if(res.data.nivel>=2){
+                if(res.data.nivel>=999){
                   setAccess(true)
                   setMsg('Cumple permisos')
                   Toast.fire({
@@ -135,7 +135,7 @@ if(user?.firstName=="Cargando"){
 <>
 <div className="lockscreen-image" style={{ marginTop: "15px" }}>
   <img 
-    src={user?.picture} 
+    src={`${user?.picture} || ${import.meta.env.VITE_API_SERVER}/api/v1/images/images/nobody.jpg`} 
     alt="Imagen de usuario" 
     onError={(e) => {
       e.target.src=`${import.meta.env.VITE_API_SERVER}/api/v1/images/images/nobody.jpg` 

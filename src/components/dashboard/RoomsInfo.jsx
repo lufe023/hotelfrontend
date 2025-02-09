@@ -3,7 +3,7 @@ import Tasks from './Tasks';
 import axios from 'axios';
 import getConfig from "../../utils/getConfig";
 import Spinner from '../spinner/Spinner';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 const RoomsInfo = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [openDropdown, setOpenDropdown] = useState(null);
@@ -12,6 +12,8 @@ const RoomsInfo = () => {
     const [allData, setAllData] = useState()
     const [allUbications, setAllUbications] = useState([])
     const [summary, setSummary] = useState()
+    const Navigate = useNavigate() 
+
     const getRoomsInfo = (param = '') => {
       // const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/summary/rooms?ubication=${param}`;
       setIsLoading(true)
@@ -31,7 +33,7 @@ const RoomsInfo = () => {
     }
     
 useEffect(() => {
-  getRoomsInfo(ubication)
+  getRoomsInfo(ubication.id)
 }, [ubication])
 
  const toggleDropdown = (id) => {
@@ -82,8 +84,8 @@ useEffect(() => {
     <div className="card-body p-3">
       <div className='d-flex gap-2 align-items-end' style={{flexWrap:'wrap'}}>
       <button onClick={()=>setUbication('')} className={`btn ${ubication==''?'btn-primary':'btn-secondary'} `} type="button">Todos</button>
-{allUbications?.map((botton, index)=>
-      <button key={index}  onClick={()=>setUbication(botton.id)} className={`btn ${ubication.id==botton.id?'btn-primary':'btn-secondary'} `} type="button">{botton.name}</button>
+      {allUbications?.map((botton, index)=>
+      <button key={index}  onClick={()=>setUbication(botton)} className={`btn ${botton.id==ubication.id?'btn-primary':'btn-secondary'} `} type="button">{botton.name}</button>
       )
       }
       
@@ -119,7 +121,7 @@ useEffect(() => {
 {cards?.map((card) => {
   const { className, label } = statusClass(card.status);
   return (
-    <div key={card.id} className="col-md-4 col-4 col-12 mb-4 ">
+    <div key={card.id} className="col-md-4 col-4 col-12 mb-4 " onDoubleClick={()=>Navigate(`/room/${card.id}`)}>
       <div className={`card ${className}`}>
 
         <span className={`mask ${className} opacity-10 border-radius-lg`}></span>

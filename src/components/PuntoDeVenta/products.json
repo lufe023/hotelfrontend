@@ -1,153 +1,1099 @@
 [
-    {
-      "id": 1,
-      "nombre": "Bebida Cola",
-      "precio": 3.5,
-      "codigoBarra": "7501001234561"
-    },
-    {
-      "id": 2,
-      "nombre": "Hamburguesa",
-      "precio": 5.99,
-      "codigoBarra": "7501002234562"
-    },
-    {
-      "id": 3,
-      "nombre": "Papas Fritas",
-      "precio": 2.99,
-      "codigoBarra": "7501003234563"
-    },
-    {
-      "id": 4,
-      "nombre": "Agua Mineral",
-      "precio": 1.5,
-      "codigoBarra": "7501004234564"
-    },
-    {
-      "id": 5,
-      "nombre": "Ensalada Cesar",
-      "precio": 4.99,
-      "codigoBarra": "7501005234565"
-    },
-    {
-      "id": 6,
-      "nombre": "Servicio de Spa",
-      "precio": 50.0,
-      "codigoBarra": "7501006234566"
-    },
-    {
-      "id": 7,
-      "nombre": "Corte de Cabello",
-      "precio": 15.0,
-      "codigoBarra": "7501007234567"
-    },
-    {
-      "id": 8,
-      "nombre": "Manicura",
-      "precio": 25.0,
-      "codigoBarra": "7501008234568"
-    },
-    {
-      "id": 9,
-      "nombre": "Pedicura",
-      "precio": 30.0,
-      "codigoBarra": "7501009234569"
-    },
-    {
-      "id": 10,
-      "nombre": "Lavado de Auto",
-      "precio": 20.0,
-      "codigoBarra": "7501010234570"
-    },
-    {
-      "id": 11,
-      "nombre": "Cambio de Aceite",
-      "precio": 35.0,
-      "codigoBarra": "7501011234571"
-    },
-    {
-      "id": 12,
-      "nombre": "Torta de Chocolate",
-      "precio": 8.99,
-      "codigoBarra": "7501012234572"
-    },
-    {
-      "id": 13,
-      "nombre": "Café Espresso",
-      "precio": 2.5,
-      "codigoBarra": "7501013234573"
-    },
-    {
-      "id": 14,
-      "nombre": "Sandwich de Jamón",
-      "precio": 4.5,
-      "codigoBarra": "7501014234574"
-    },
-    {
-      "id": 15,
-      "nombre": "Pizza Familiar",
-      "precio": 12.99,
-      "codigoBarra": "7501015234575"
-    },
-    {
-      "id": 16,
-      "nombre": "Laptop HP",
-      "precio": 700.0,
-      "codigoBarra": "7501016234576"
-    },
-    {
-      "id": 17,
-      "nombre": "Mouse Inalámbrico",
-      "precio": 25.0,
-      "codigoBarra": "7501017234577"
-    },
-    {
-      "id": 18,
-      "nombre": "Teclado Mecánico",
-      "precio": 80.0,
-      "codigoBarra": "7501018234578"
-    },
-    {
-      "id": 19,
-      "nombre": "Audífonos Bluetooth",
-      "precio": 50.0,
-      "codigoBarra": "7501019234579"
-    },
-    {
-      "id": 20,
-      "nombre": "Monitor LED 24''",
-      "precio": 200.0,
-      "codigoBarra": "7501020234580"
-    },
-    {
-      "id": 21,
-      "nombre": "Zapatos Deportivos",
-      "precio": 120.0,
-      "codigoBarra": "7501021234581"
-    },
-    {
-      "id": 22,
-      "nombre": "Camiseta Casual",
-      "precio": 25.0,
-      "codigoBarra": "7501022234582"
-    },
-    {
-      "id": 23,
-      "nombre": "Pantalón de Mezclilla",
-      "precio": 45.0,
-      "codigoBarra": "7501023234583"
-    },
-    {
-      "id": 24,
-      "nombre": "Chaqueta de Cuero",
-      "precio": 150.0,
-      "codigoBarra": "7501024234584"
-    },
-    {
-      "id": 25,
-      "nombre": "Reloj Inteligente",
-      "precio": 300.0,
-      "codigoBarra": "7501025234585"
-    }
-  ]
+  {
+    "id": 1000,
+    "nombre": "Presidente Light Grande",
+    "foto": "https://static.compreloadomicilio.com/almacenmachito/products/07851/6074f38e5167b948923841.webp",
+    "precio": 225,
+    "codigoBarra": "7501001234561",
+    "category": "Bebidas Gaseosas"
+  },
+  {
+    "id": 1001,
+    "nombre": "Presidente Dura Grande",
+    "foto": "https://jumbo.com.do/pub/media/catalog/product/cache/5d91a1aa0232de6a069aae492eab5701/2/0/2066222-A_3.jpg",
+    "precio": 225,
+    "codigoBarra": "7501001234561",
+    "category": "Bebidas Gaseosas"
+  },
+  
+  {
+    "id": 1,
+    "nombre": "Cocacola",
+    "foto": "https://upload.wikimedia.org/wikipedia/commons/2/27/Coca_Cola_Flasche_-_Original_Taste.jpg",
+    "precio": 3.5,
+    "codigoBarra": "7501001234561",
+    "category": "Bebidas Gaseosas"
+  },
+  {
+    "id": 2,
+    "nombre": "Hamburguesa",
+    "foto": "https://upload.wikimedia.org/wikipedia/commons/6/62/NCI_Visuals_Food_Hamburger.jpg",
+    "precio": 5.99,
+    "codigoBarra": "7501002234562",
+    "category": "Comida Rapida"
+  },
+  {
+    "id": 3,
+    "nombre": "Papas Fritas",
+    "foto": "https://i0.wp.com/soyproesa.com/wp-content/uploads/2022/04/recetas-de-papas-fritas.png?resize=1024%2C683&ssl=1",
+    "precio": 2.99,
+    "codigoBarra": "7501003234563",
+    "category": "Comida Rapida"
+  },
+  {
+    "id": 4,
+    "nombre": "Agua Mineral",
+    "foto": "https://supermercadosnacional.com/media/catalog/product/cache/fde49a4ea9a339628caa0bc56aea00ff/2/0/2033773-1.jpg",
+    "precio": 1.5,
+    "codigoBarra": "7501004234564",
+    "category": "Bebidas Naturales"
+  },
+  {
+    "id": 5,
+    "nombre": "Ensalada Cesar",
+    "foto": "https://www.gourmet.cl/wp-content/uploads/2016/09/Ensalada_C%C3%A9sar-web.jpg",
+    "precio": 4.99,
+    "codigoBarra": "7501005234565",
+    "category": "Comida Saludable"
+  },
+  {
+    "id": 6,
+    "nombre": "Servicio de Spa",
+    "foto": "https://traveler.marriott.com/es/wp-content/uploads/sites/2/2021/10/MC_MDEMC_Marriott_Medellin_Spa_1920x1080.jpg",
+    "precio": 50.0,
+    "codigoBarra": "7501006234566",
+    "category": "Bienestar"
+  },
+  {
+    "id": 7,
+    "nombre": "Corte de Cabello",
+    "precio": 15.0,
+    "codigoBarra": "7501007234567",
+    "category": "Bienestar"
+  },
+  {
+    "id": 8,
+    "nombre": "Manicura",
+    "precio": 25.0,
+    "codigoBarra": "7501008234568",
+    "category": "Bienestar"
+  },
+  {
+    "id": 9,
+    "nombre": "Pedicura",
+    "precio": 30.0,
+    "codigoBarra": "7501009234569",
+    "category": "Bienestar"
+  },
+  {
+    "id": 10,
+    "nombre": "Lavado de Auto",
+    "precio": 20.0,
+    "codigoBarra": "7501010234570",
+    "category": "Servicios Automotrices"
+  },
+  {
+    "id": 11,
+    "nombre": "Cambio de Aceite",
+    "precio": 35.0,
+    "codigoBarra": "7501011234571",
+    "category": "Servicios Automotrices"
+  },
+  {
+    "id": 12,
+    "nombre": "Torta de Chocolate",
+    "precio": 8.99,
+    "codigoBarra": "7501012234572",
+    "category": "Repostería"
+  },
+  {
+    "id": 13,
+    "nombre": "Café Espresso",
+    "precio": 2.5,
+    "codigoBarra": "7501013234573",
+    "category": "Bebidas Calientes"
+  },
+  {
+    "id": 14,
+    "nombre": "Sandwich de Jamón",
+    "precio": 4.5,
+    "codigoBarra": "7501014234574",
+    "category": "Comida Rapida"
+  },
+  {
+    "id": 15,
+    "nombre": "Pizza Familiar",
+    "precio": 12.99,
+    "codigoBarra": "7501015234575",
+    "category": "Comida Rapida"
+  },
+  {
+    "id": 16,
+    "nombre": "Laptop HP",
+    "precio": 700.0,
+    "codigoBarra": "7501016234576",
+    "category": "Tecnología"
+  },
+  {
+    "id": 17,
+    "nombre": "Mouse Inalámbrico",
+    "precio": 25.0,
+    "codigoBarra": "7501017234577",
+    "category": "Tecnología"
+  },
+  {
+    "id": 18,
+    "nombre": "Teclado Mecánico",
+    "precio": 80.0,
+    "codigoBarra": "7501018234578",
+    "category": "Tecnología"
+  },
+  {
+    "id": 19,
+    "nombre": "Audífonos Bluetooth",
+    "precio": 50.0,
+    "codigoBarra": "7501019234579",
+    "category": "Tecnología"
+  },
+  {
+    "id": 20,
+    "nombre": "Monitor LED 24''",
+    "precio": 200.0,
+    "codigoBarra": "7501020234580",
+    "category": "Tecnología"
+  },
+  {
+    "id": 21,
+    "nombre": "Zapatos Deportivos",
+    "precio": 120.0,
+    "codigoBarra": "7501021234581",
+    "category": "Calzado"
+  },
+  {
+    "id": 22,
+    "nombre": "Camiseta Casual",
+    "precio": 25.0,
+    "codigoBarra": "7501022234582",
+    "category": "Ropa"
+  },
+  {
+    "id": 23,
+    "nombre": "Pantalón de Mezclilla",
+    "precio": 45.0,
+    "codigoBarra": "7501023234583",
+    "category": "Ropa"
+  },
+  {
+    "id": 24,
+    "nombre": "Chaqueta de Cuero",
+    "precio": 150.0,
+    "codigoBarra": "7501024234584",
+    "category": "Ropa"
+  },
+  {
+    "id":25,
+    "nombre": "Reloj Inteligente",
+    "precio": 300.0,
+    "codigoBarra": "7501025234585",
+    "category": "Accesorios"
+  },
+  {
+    "createdAt": "2025-01-27T20:00:51.173Z",
+    "nombre": "Ergonomic Plastic Fish",
+    "precio": 666.00,
+    "codigoBarra": "82419",
+    "category": "Gorgeous",
+    "id":26
+  },
+  {
+    "createdAt": "2025-01-28T09:54:54.339Z",
+    "nombre": "Generic Cotton Fish",
+    "precio": 926.00,
+    "codigoBarra": "61122-4657",
+    "category": "Practical",
+    "id":27
+  },
+  {
+    "createdAt": "2025-01-27T19:33:45.926Z",
+    "nombre": "Gorgeous Wooden Pants",
+    "foto": "data:image/jpeg;base64,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",
+    "precio": 772.00,
+    "codigoBarra": "57141-1754",
+    "category": "Gorgeous",
+    "id":28
+  },
+  {
+    "createdAt": "2025-01-28T05:12:15.531Z",
+    "nombre": "Licensed Steel Keyboard",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/159.jpg",
+    "precio": 38.00,
+    "codigoBarra": "38411-0407",
+    "category": "Bespoke",
+    "id":29
+  },
+  {
+    "createdAt": "2025-01-27T18:12:42.416Z",
+    "nombre": "Refined Metal Gloves",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1098.jpg",
+    "precio": 330.00,
+    "codigoBarra": "99330-0471",
+    "category": "Licensed",
+    "id":30
+  },
+  {
+    "createdAt": "2025-01-27T19:32:55.257Z",
+    "nombre": "Small Wooden Computer",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/875.jpg",
+    "precio": 210.00,
+    "codigoBarra": "77791",
+    "category": "Handcrafted",
+    "id":31
+  },
+  {
+    "createdAt": "2025-01-28T01:05:38.874Z",
+    "nombre": "Small Steel Mouse",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1183.jpg",
+    "precio": 221.00,
+    "codigoBarra": "61959-0894",
+    "category": "Ergonomic",
+    "id":32
+  },
+  {
+    "createdAt": "2025-01-28T09:31:45.075Z",
+    "nombre": "Bespoke Wooden Gloves",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/752.jpg",
+    "precio": 90.00,
+    "codigoBarra": "86531",
+    "category": "Refined",
+    "id":33
+  },
+  {
+    "createdAt": "2025-01-28T00:19:42.798Z",
+    "nombre": "Gorgeous Frozen Hat",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1067.jpg",
+    "precio": 845.00,
+    "codigoBarra": "25375",
+    "category": "Electronic",
+    "id":34
+  },
+  {
+    "createdAt": "2025-01-28T12:31:00.280Z",
+    "nombre": "Sleek Steel Bacon",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1137.jpg",
+    "precio": 778.00,
+    "codigoBarra": "65274-6940",
+    "category": "Sleek",
+    "id":35
+  },
+  {
+    "createdAt": "2025-01-28T05:37:15.049Z",
+    "nombre": "Ergonomic Rubber Salad",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1229.jpg",
+    "precio": 24.00,
+    "codigoBarra": "05271",
+    "category": "Sleek",
+    "id":36
+  },
+  {
+    "createdAt": "2025-01-28T09:38:38.417Z",
+    "nombre": "Generic Bronze Car",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/609.jpg",
+    "precio": 758.00,
+    "codigoBarra": "80657",
+    "category": "Luxurious",
+    "id":37
+  },
+  {
+    "createdAt": "2025-01-27T21:17:10.687Z",
+    "nombre": "Practical Cotton Ball",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/135.jpg",
+    "precio": 994.00,
+    "codigoBarra": "38873",
+    "category": "Small",
+    "id":38
+  },
+  {
+    "createdAt": "2025-01-27T18:24:39.736Z",
+    "nombre": "Intelligent Granite Ball",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/43.jpg",
+    "precio": 94.00,
+    "codigoBarra": "27145",
+    "category": "Incredible",
+    "id":39
+     },
+  {
+    "createdAt": "2025-01-28T08:50:04.834Z",
+    "nombre": "Small Fresh Car",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/571.jpg",
+    "precio": 327.00,
+    "codigoBarra": "44375-0679",
+    "category": "Luxurious",
+    "id":40
+  },
+  {
+    "createdAt": "2025-01-28T02:58:11.315Z",
+    "nombre": "Unbranded Wooden Bike",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/422.jpg",
+    "precio": 937.00,
+    "codigoBarra": "53222-2319",
+    "category": "Awesome",
+    "id":41
+  },
+  {
+    "createdAt": "2025-01-28T03:29:31.175Z",
+    "nombre": "Electronic Concrete Gloves",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1106.jpg",
+    "precio": 483.00,
+    "codigoBarra": "28623-4679",
+    "category": "Handmade",
+    "id":42
+  },
+  {
+    "createdAt": "2025-01-28T01:32:21.863Z",
+    "nombre": "Unbranded Metal Computer",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/558.jpg",
+    "precio": 706.00,
+    "codigoBarra": "38107",
+    "category": "Incredible",
+    "id":43
+  },
+  {
+    "createdAt": "2025-01-28T07:56:00.950Z",
+    "nombre": "Tasty Rubber Chips",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/880.jpg",
+    "precio": 495.00,
+    "codigoBarra": "45932",
+    "category": "Gorgeous",
+    "id":44
+  },
+  {
+    "createdAt": "2025-01-28T08:17:27.804Z",
+    "nombre": "Oriental Concrete Computer",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/403.jpg",
+    "precio": 763.00,
+    "codigoBarra": "87764-6952",
+    "category": "Gorgeous",
+    "id":45
+  },
+  {
+    "createdAt": "2025-01-28T05:11:54.302Z",
+    "nombre": "Sleek Bronze Keyboard",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/65.jpg",
+    "precio": 221.00,
+    "codigoBarra": "35211-5671",
+    "category": "Unbranded",
+    "id":46
+  },
+  {
+    "createdAt": "2025-01-28T16:35:43.204Z",
+    "nombre": "Tasty Fresh Car",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/463.jpg",
+    "precio": 199.00,
+    "codigoBarra": "16407-2223",
+    "category": "Refined",
+    "id":47
+  },
+  {
+    "createdAt": "2025-01-27T23:07:00.367Z",
+    "nombre": "Small Concrete Fish",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/528.jpg",
+    "precio": 850.00,
+    "codigoBarra": "85947",
+    "category": "Handcrafted",
+    "id":48
+  },
+  {
+    "createdAt": "2025-01-27T17:51:20.801Z",
+    "nombre": "Electronic Wooden Salad",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1167.jpg",
+    "precio": 2.00,
+    "codigoBarra": "65789-8382",
+    "category": "Unbranded",
+    "id":49
+  },
+  {
+    "createdAt": "2025-01-28T16:34:56.481Z",
+    "nombre": "Generic Bronze Shoes",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/731.jpg",
+    "precio": 150.00,
+    "codigoBarra": "33468-5186",
+    "category": "Luxurious",
+    "id":50
+  },
+  {
+    "createdAt": "2025-01-27T23:18:55.760Z",
+    "nombre": "Sleek Plastic Chips",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/914.jpg",
+    "precio": 935.00,
+    "codigoBarra": "45355",
+    "category": "Sleek",
+    "id":51
+  },
+  {
+    "createdAt": "2025-01-27T19:31:13.390Z",
+    "nombre": "Sleek Concrete Pants",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/406.jpg",
+    "precio": 273.00,
+    "codigoBarra": "94391",
+    "category": "Ergonomic",
+    "id":52
+  },
+  {
+    "createdAt": "2025-01-28T02:14:41.668Z",
+    "nombre": "Luxurious Granite Table",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1216.jpg",
+    "precio": 981.00,
+    "codigoBarra": "79904-2752",
+    "category": "Incredible",
+    "id":53
+  },
+  {
+    "createdAt": "2025-01-27T20:33:31.363Z",
+    "nombre": "Recycled Plastic Shirt",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/785.jpg",
+    "precio": 225.00,
+    "codigoBarra": "94578-6860",
+    "category": "Licensed",
+    "id":54
+  },
+  {
+    "createdAt": "2025-01-28T07:57:56.740Z",
+    "nombre": "Luxurious Steel Salad",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/949.jpg",
+    "precio": 678.00,
+    "codigoBarra": "26148",
+    "category": "Sleek",
+    "id":55
+  },
+  {
+    "createdAt": "2025-01-28T15:55:40.783Z",
+    "nombre": "Elegant Cotton Bike",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/495.jpg",
+    "precio": 495.00,
+    "codigoBarra": "41886-4349",
+    "category": "Refined",
+    "id":56
+  },
+  {
+    "createdAt": "2025-01-28T13:01:58.641Z",
+    "nombre": "Fantastic Granite Bike",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1162.jpg",
+    "precio": 205.00,
+    "codigoBarra": "68891",
+    "category": "Generic",
+    "id":57
+  },
+  {
+    "createdAt": "2025-01-28T16:01:29.511Z",
+    "nombre": "Awesome Metal Car",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/736.jpg",
+    "precio": 104.00,
+    "codigoBarra": "59922-4080",
+    "category": "Refined",
+    "id":58
+  },
+  {
+    "createdAt": "2025-01-28T13:52:22.126Z",
+    "nombre": "Ergonomic Frozen Mouse",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1033.jpg",
+    "precio": 275.00,
+    "codigoBarra": "37938-6718",
+    "category": "Refined",
+    "id":59
+  },
+  {
+    "createdAt": "2025-01-28T09:51:05.176Z",
+    "nombre": "Tasty Soft Table",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/272.jpg",
+    "precio": 626.00,
+    "codigoBarra": "70028",
+    "category": "Rustic",
+    "id":60
+  },
+  {
+    "createdAt": "2025-01-27T22:20:35.452Z",
+    "nombre": "Small Metal Tuna",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1009.jpg",
+    "precio": 345.00,
+    "codigoBarra": "17550-4620",
+    "category": "Handcrafted",
+    "id":61
+  },
+  {
+    "createdAt": "2025-01-27T22:27:42.943Z",
+    "nombre": "Fantastic Bronze Bacon",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/900.jpg",
+    "precio": 333.00,
+    "codigoBarra": "12175",
+    "category": "Handmade",
+    "id":62
+  },
+  {
+    "createdAt": "2025-01-27T18:21:48.310Z",
+    "nombre": "Handmade Granite Pizza",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/314.jpg",
+    "precio": 281.00,
+    "codigoBarra": "61887",
+    "category": "Unbranded",
+    "id":63
+  },
+  {
+    "createdAt": "2025-01-28T11:59:59.450Z",
+    "nombre": "Handmade Frozen Sausages",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/110.jpg",
+    "precio": 177.00,
+    "codigoBarra": "80596",
+    "category": "Rustic",
+    "id":64
+  },
+  {
+    "createdAt": "2025-01-27T21:58:59.586Z",
+    "nombre": "Bespoke Soft Pants",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/319.jpg",
+    "precio": 622.00,
+    "codigoBarra": "69026",
+    "category": "Modern",
+    "id":65
+  },
+  {
+    "createdAt": "2025-01-28T01:58:58.797Z",
+    "nombre": "Ergonomic Steel Tuna",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/595.jpg",
+    "precio": 568.00,
+    "codigoBarra": "83386",
+    "category": "Rustic",
+    "id":66
+  },
+  {
+    "createdAt": "2025-01-28T01:18:47.290Z",
+    "nombre": "Luxurious Frozen Pizza",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/485.jpg",
+    "precio": 151.00,
+    "codigoBarra": "44067",
+    "category": "Handcrafted",
+    "id":67
+  },
+  {
+    "createdAt": "2025-01-28T12:42:51.267Z",
+    "nombre": "Ergonomic Bronze Tuna",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/610.jpg",
+    "precio": 32.00,
+    "codigoBarra": "98577",
+    "category": "Elegant",
+    "id":68
+  },
+  {
+    "createdAt": "2025-01-27T19:24:19.822Z",
+    "nombre": "Modern Concrete Fish",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1035.jpg",
+    "precio": 861.00,
+    "codigoBarra": "90891",
+    "category": "Electronic",
+    "id":69
+  },
+  {
+    "createdAt": "2025-01-27T17:39:31.219Z",
+    "nombre": "Incredible Frozen Towels",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/582.jpg",
+    "precio": 754.00,
+    "codigoBarra": "68998-8164",
+    "category": "Small",
+    "id":70
+  },
+  {
+    "createdAt": "2025-01-28T14:03:05.604Z",
+    "nombre": "Gorgeous Wooden Gloves",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/913.jpg",
+    "precio": 696.00,
+    "codigoBarra": "56549",
+    "category": "Rustic",
+    "id":71
+  },
+  {
+    "createdAt": "2025-01-28T05:28:10.781Z",
+    "nombre": "Sleek Wooden Tuna",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/537.jpg",
+    "precio": 27.00,
+    "codigoBarra": "07716-5912",
+    "category": "Intelligent",
+    "id":72
+  },
+  {
+    "createdAt": "2025-01-28T11:22:53.190Z",
+    "nombre": "Unbranded Wooden Salad",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/490.jpg",
+    "precio": 944.00,
+    "codigoBarra": "24208-6402",
+    "category": "Bespoke",
+    "id":73
+  },
+  {
+    "createdAt": "2025-01-28T01:44:35.439Z",
+    "nombre": "Ergonomic Metal Towels",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/679.jpg",
+    "precio": 309.00,
+    "codigoBarra": "54986",
+    "category": "Handcrafted",
+    "id":74
+  },
+  {
+    "createdAt": "2025-01-27T23:26:29.338Z",
+    "nombre": "Tasty Cotton Towels",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/602.jpg",
+    "precio": 440.00,
+    "codigoBarra": "02571-9745",
+    "category": "Luxurious",
+    "id":75
+  },
+  {
+    "createdAt": "2025-01-27T19:48:12.266Z",
+    "nombre": "Awesome Bronze Chicken",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/729.jpg",
+    "precio": 393.00,
+    "codigoBarra": "86096",
+    "category": "Gorgeous",
+    "id":76
+  },
+  {
+    "createdAt": "2025-01-28T12:20:09.844Z",
+    "nombre": "Awesome Fresh Soap",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/118.jpg",
+    "precio": 392.00,
+    "codigoBarra": "11076",
+    "category": "Oriental",
+    "id":77
+  },
+  {
+    "createdAt": "2025-01-28T13:09:31.497Z",
+    "nombre": "Gorgeous Concrete Mouse",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/506.jpg",
+    "precio": 40.00,
+    "codigoBarra": "29226-9802",
+    "category": "Awesome",
+    "id":78
+  },
+  {
+    "createdAt": "2025-01-27T22:45:47.474Z",
+    "nombre": "Handcrafted Steel Keyboard",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/296.jpg",
+    "precio": 21.00,
+    "codigoBarra": "68427",
+    "category": "Sleek",
+    "id":79
+  },
+  {
+    "createdAt": "2025-01-28T15:49:17.208Z",
+    "nombre": "Practical Rubber Bacon",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/180.jpg",
+    "precio": 726.00,
+    "codigoBarra": "70172",
+    "category": "Electronic",
+    "id":80
+  },
+  {
+    "createdAt": "2025-01-28T09:32:00.202Z",
+    "nombre": "Elegant Soft Car",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/851.jpg",
+    "precio": 869.00,
+    "codigoBarra": "96959",
+    "category": "Handmade",
+    "id":81
+  },
+  {
+    "createdAt": "2025-01-28T03:10:01.287Z",
+    "nombre": "Intelligent Soft Bacon",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/9.jpg",
+    "precio": 799.00,
+    "codigoBarra": "79148-5656",
+    "category": "Bespoke",
+    "id":82
+  },
+  {
+    "createdAt": "2025-01-28T15:21:06.883Z",
+    "nombre": "Fantastic Fresh Hat",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/109.jpg",
+    "precio": 823.00,
+    "codigoBarra": "82963-9349",
+    "category": "Licensed",
+    "id":83
+  },
+  {
+    "createdAt": "2025-01-27T18:20:42.509Z",
+    "nombre": "Handcrafted Frozen Soap",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/466.jpg",
+    "precio": 670.00,
+    "codigoBarra": "82814",
+    "category": "Unbranded",
+    "id":84
+  },
+  {
+    "createdAt": "2025-01-28T09:57:07.126Z",
+    "nombre": "Incredible Fresh Shoes",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/611.jpg",
+    "precio": 722.00,
+    "codigoBarra": "61887-0223",
+    "category": "Fantastic",
+    "id":85
+  },
+  {
+    "createdAt": "2025-01-28T13:28:23.656Z",
+    "nombre": "Gorgeous Plastic Cheese",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1019.jpg",
+    "precio": 456.00,
+    "codigoBarra": "23834-5299",
+    "category": "Small",
+    "id":86
+  },
+  {
+    "createdAt": "2025-01-27T16:51:27.644Z",
+    "nombre": "Oriental Fresh Table",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/596.jpg",
+    "precio": 704.00,
+    "codigoBarra": "65595",
+    "category": "Electronic",
+    "id":87
+  },
+  {
+    "createdAt": "2025-01-28T11:43:18.107Z",
+    "nombre": "Small Bronze Chair",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/206.jpg",
+    "precio": 626.00,
+    "codigoBarra": "20473",
+    "category": "Modern",
+    "id":88
+  },
+  {
+    "createdAt": "2025-01-27T21:45:18.935Z",
+    "nombre": "Sleek Rubber Shoes",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/289.jpg",
+    "precio": 211.00,
+    "codigoBarra": "19009-7319",
+    "category": "Modern",
+    "id":89
+  },
+  {
+    "createdAt": "2025-01-28T04:13:34.938Z",
+    "nombre": "Modern Frozen Shirt",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1165.jpg",
+    "precio": 85.00,
+    "codigoBarra": "50958",
+    "category": "Practical",
+    "id":90
+  },
+  {
+    "createdAt": "2025-01-28T03:25:13.999Z",
+    "nombre": "Rustic Soft Salad",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/464.jpg",
+    "precio": 266.00,
+    "codigoBarra": "64364",
+    "category": "Electronic",
+    "id":91
+  },
+  {
+    "createdAt": "2025-01-27T21:40:43.679Z",
+    "nombre": "Handcrafted Wooden Cheese",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/874.jpg",
+    "precio": 145.00,
+    "codigoBarra": "28223",
+    "category": "Handcrafted",
+    "id":92
+  },
+  {
+    "createdAt": "2025-01-28T13:37:38.201Z",
+    "nombre": "Electronic Bronze Pizza",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/691.jpg",
+    "precio": 322.00,
+    "codigoBarra": "49319",
+    "category": "Licensed",
+    "id":93
+  },
+  {
+    "createdAt": "2025-01-28T09:26:10.523Z",
+    "nombre": "Elegant Metal Shirt",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/551.jpg",
+    "precio": 779.00,
+    "codigoBarra": "98216",
+    "category": "Fantastic",
+    "id":94
+  },
+  {
+    "createdAt": "2025-01-28T09:37:00.146Z",
+    "nombre": "Recycled Soft Towels",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/778.jpg",
+    "precio": 47.00,
+    "codigoBarra": "11295-3798",
+    "category": "Practical",
+    "id":95
+  },
+  {
+    "createdAt": "2025-01-28T09:48:53.549Z",
+    "nombre": "Handcrafted Rubber Chair",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/873.jpg",
+    "precio": 494.00,
+    "codigoBarra": "16502",
+    "category": "Fantastic",
+    "id":96
+  },
+  {
+    "createdAt": "2025-01-28T05:21:26.080Z",
+    "nombre": "Refined Bronze Pants",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1162.jpg",
+    "precio": 139.00,
+    "codigoBarra": "82446",
+    "category": "Recycled",
+    "id":97
+  },
+  {
+    "createdAt": "2025-01-27T18:15:40.856Z",
+    "nombre": "Practical Rubber Bacon",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1230.jpg",
+    "precio": 503.00,
+    "codigoBarra": "79745-2122",
+    "category": "Handcrafted",
+    "id":98
+  },
+  {
+    "createdAt": "2025-01-28T00:28:50.720Z",
+    "nombre": "Intelligent Fresh Pizza",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/195.jpg",
+    "precio": 731.00,
+    "codigoBarra": "06337-4845",
+    "category": "Incredible",
+    "id":99
+  },
+  {
+    "createdAt": "2025-01-28T15:52:19.498Z",
+    "nombre": "Incredible Concrete Pizza",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/182.jpg",
+    "precio": 699.00,
+    "codigoBarra": "29054",
+    "category": "Handcrafted",
+    "id":100
+  },
+  {
+    "createdAt": "2025-01-27T17:20:36.663Z",
+    "nombre": "Unbranded Rubber Computer",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/874.jpg",
+    "precio": 844.00,
+    "codigoBarra": "54184-6690",
+    "category": "Incredible",
+    "id":101
+  },
+  {
+    "createdAt": "2025-01-28T00:53:53.318Z",
+    "nombre": "Unbranded Soft Hat",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/842.jpg",
+    "precio": 681.00,
+    "codigoBarra": "59132",
+    "category": "Recycled",
+    "id":102
+  },
+  {
+    "createdAt": "2025-01-28T02:41:37.701Z",
+    "nombre": "Intelligent Cotton Keyboard",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/787.jpg",
+    "precio": 465.00,
+    "codigoBarra": "29853",
+    "category": "Tasty",
+    "id":103
+  },
+  {
+    "createdAt": "2025-01-28T08:50:50.339Z",
+    "nombre": "Unbranded Fresh Fish",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/581.jpg",
+    "precio": 654.00,
+    "codigoBarra": "22493-9961",
+    "category": "Ergonomic",
+    "id":104
+  },
+  {
+    "createdAt": "2025-01-27T20:50:01.953Z",
+    "nombre": "Generic Bronze Pants",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/825.jpg",
+    "precio": 738.00,
+    "codigoBarra": "09139",
+    "category": "Handcrafted",
+    "id":105
+  },
+  {
+    "createdAt": "2025-01-28T05:35:50.375Z",
+    "nombre": "Ergonomic Bronze Chair",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1048.jpg",
+    "precio": 612.00,
+    "codigoBarra": "28542",
+    "category": "Bespoke",
+    "id":106
+  },
+  {
+    "createdAt": "2025-01-27T21:33:59.990Z",
+    "nombre": "Unbranded Steel Shoes",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/294.jpg",
+    "precio": 153.00,
+    "codigoBarra": "29009",
+    "category": "Small",
+    "id":107
+  },
+  {
+    "createdAt": "2025-01-27T22:48:44.710Z",
+    "nombre": "Oriental Rubber Towels",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/239.jpg",
+    "precio": 345.00,
+    "codigoBarra": "35730",
+    "category": "Gorgeous",
+    "id":108
+  },
+  {
+    "createdAt": "2025-01-27T19:22:08.122Z",
+    "nombre": "Incredible Metal Pizza",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1175.jpg",
+    "precio": 976.00,
+    "codigoBarra": "76026",
+    "category": "Licensed",
+    "id":109
+  },
+  {
+    "createdAt": "2025-01-28T16:10:32.487Z",
+    "nombre": "Electronic Metal Cheese",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/548.jpg",
+    "precio": 369.00,
+    "codigoBarra": "47572",
+    "category": "Licensed",
+    "id":110
+  },
+  {
+    "createdAt": "2025-01-28T05:16:50.902Z",
+    "nombre": "Elegant Rubber Pizza",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/834.jpg",
+    "precio": 175.00,
+    "codigoBarra": "97662-3664",
+    "category": "Awesome",
+    "id":111
+  },
+  {
+    "createdAt": "2025-01-28T15:16:27.747Z",
+    "nombre": "Gorgeous Wooden Cheese",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1207.jpg",
+    "precio": 609.00,
+    "codigoBarra": "07802",
+    "category": "Generic",
+    "id":112
+  },
+  {
+    "createdAt": "2025-01-27T22:02:49.378Z",
+    "nombre": "Refined Frozen Mouse",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/420.jpg",
+    "precio": 483.00,
+    "codigoBarra": "70459-1039",
+    "category": "Tasty",
+    "id":113
+  },
+  {
+    "createdAt": "2025-01-28T00:45:28.173Z",
+    "nombre": "Rustic Rubber Soap",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/248.jpg",
+    "precio": 909.00,
+    "codigoBarra": "72146",
+    "category": "Ergonomic",
+    "id":114
+  },
+  {
+    "createdAt": "2025-01-27T19:49:40.089Z",
+    "nombre": "Small Steel Towels",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/469.jpg",
+    "precio": 209.00,
+    "codigoBarra": "80893-9268",
+    "category": "Modern",
+    "id":115
+  },
+  {
+    "createdAt": "2025-01-28T12:06:56.987Z",
+    "nombre": "Sleek Cotton Shoes",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/736.jpg",
+    "precio": 275.00,
+    "codigoBarra": "47510-9242",
+    "category": "Small",
+    "id":116
+  },
+  {
+    "createdAt": "2025-01-28T15:41:07.117Z",
+    "nombre": "Fantastic Bronze Shirt",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/960.jpg",
+    "precio": 543.00,
+    "codigoBarra": "69959",
+    "category": "Luxurious",
+    "id":117
+  },
+  {
+    "createdAt": "2025-01-28T16:23:12.215Z",
+    "nombre": "Generic Cotton Soap",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/810.jpg",
+    "precio": 813.00,
+    "codigoBarra": "41827-2132",
+    "category": "Ergonomic",
+    "id":118
+  },
+  {
+    "createdAt": "2025-01-28T12:46:32.986Z",
+    "nombre": "Rustic Soft Chair",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/588.jpg",
+    "precio": 926.00,
+    "codigoBarra": "78743-0021",
+    "category": "Bespoke",
+    "id":119
+  },
+  {
+    "createdAt": "2025-01-27T16:47:15.153Z",
+    "nombre": "Oriental Fresh Mouse",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/181.jpg",
+    "precio": 557.00,
+    "codigoBarra": "50321-6605",
+    "category": "Practical",
+    "id":120
+  },
+  {
+    "createdAt": "2025-01-27T17:19:34.953Z",
+    "nombre": "Recycled Fresh Gloves",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/428.jpg",
+    "precio": 21.00,
+    "codigoBarra": "29407-5550",
+    "category": "Generic",
+    "id":121
+  },
+  {
+    "createdAt": "2025-01-28T13:04:17.139Z",
+    "nombre": "Handmade Soft Sausages",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/935.jpg",
+    "precio": 786.00,
+    "codigoBarra": "41761-9851",
+    "category": "Gorgeous",
+    "id":122
+  },
+  {
+    "createdAt": "2025-01-27T20:09:32.364Z",
+    "nombre": "Gorgeous Granite Bike",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1146.jpg",
+    "precio": 158.00,
+    "codigoBarra": "22306-8127",
+    "category": "Bespoke",
+    "id":123
+  },
+  {
+    "createdAt": "2025-01-27T17:50:11.895Z",
+    "nombre": "Licensed Steel Sausages",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/654.jpg",
+    "precio": 79.00,
+    "codigoBarra": "80861-2996",
+    "category": "Handcrafted",
+    "id":124
+  },
+  {
+    "createdAt": "2025-01-28T11:18:43.715Z",
+    "nombre": "Incredible Steel Bike",
+    "foto": "https://cloudflare-ipfs.com/ipfs/Qmd3W5DuhgHirLHGVixi6V76LhCkZUz6pnFt5AJBiyvHye/avatar/1170.jpg",
+    "precio": 203.00,
+    "codigoBarra": "28354-6421",
+    "category": "Tasty",
+    "id":125
+  }
+]
   

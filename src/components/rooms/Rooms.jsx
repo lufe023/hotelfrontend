@@ -136,7 +136,7 @@ const Rooms = () => {
           {room && (
             <div className="row">
               <div className="col-lg-8 col-md-6 mb-md-0 mb-4">
-                <div className="card rounded-4 shadow-sm" style={{ marginBottom: 20 }}>
+                <div className="card rounded-4 shadow-sm" style={{ marginBottom: 20 }} onDoubleClick={() => setEditing(true)}>
                   {editing ? (
                     <RoomDetailsUpdate room={room} getRoomsInfo={getRoomsInfo} setEditing={setEditing} />
                   ) : (
@@ -148,8 +148,7 @@ const Rooms = () => {
                       </div>
                       <h6 className={`mb-1 ${className}`}>Habitación #{room?.roomNumber} <span className='text-xs'>( {label + " " +room?.pricePerNight } )</span></h6>
                       <p className="text-sm mb-0">
-                        {console.log(room)}
-                        <i className="fas fa-map-marker-alt me-2"></i>{room?.areas.name}
+                        <i className="fas fa-map-marker-alt me-2"></i>{room?.areas?.name}
                       </p>
                     </div>
                   )}

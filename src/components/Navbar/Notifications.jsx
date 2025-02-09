@@ -174,7 +174,7 @@ const putNotificatoionsRead = (id) => {
       </button>
 
       {openDropdown && (
-        <ul className="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4 show" aria-labelledby="dropdownMenuButton">
+        <ul className="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4 show shadow" aria-labelledby="dropdownMenuButton" >
           {notifications?.map((notification, index) => {
             const { type, createdAt } = notification;
             const { icon, color, title } = notificationTypeStyles[type] || notificationTypeStyles.default;

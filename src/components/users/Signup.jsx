@@ -1,95 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import NavbarNoProtected from '../NotProtected/NavbarNoProtected'
-import FooterNoProtected from '../NotProtected/FooterNoProtected'
-import axios from 'axios';
-import { useForm } from "react-hook-form";
-import { useDispatch } from 'react-redux';
-import { Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
-import getUserbyId from './getMyUser';
+import axios from 'axios';
+import FooterNoProtected from '../NotProtected/FooterNoProtected';
+import { Link } from 'react-router-dom';
+import NavbarNoProtected from '../NotProtected/NavbarNoProtected';
 
-const Login = () => {
-  const [isLogged, setIsLogged] = useState(localStorage.getItem('token'));
-  const [message, setMessage] = useState('');
+const RegisterUser = () => {
+  const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const [loader, setLoader] = useState(false);
-  const { register, handleSubmit, reset } = useForm();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const dispatch = useDispatch();
 
-    const importantAlert = (msg, icon) => {
-       Swal.fire({
-              icon: icon,
-              title: `${msg}`,
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              showCloseButton:true
-            });
-    }
-    
-  useEffect(() => {
-    const urlParams = new URLSearchParams(location.search);
-    const token = urlParams.get('token');
-    const error = urlParams.get('error');
-    
-    if (token) {
-      localStorage.setItem('token', token);
-      setIsLogged(true);
-      navigate('/dashboard');
-    } else if (error) {
-      setMessage(error);
+  const onSubmit = async (data) => {
+    if (!data.firstName || !data.email || !data.password) {
       Swal.fire({
         icon: 'error',
-        title: 'Algo anda mal',
-        text: error,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
+        title: 'Campos obligatorios',
+        text: 'Por favor completa al menos el nombre, email y contraseña.'
       });
+      return;
     }
-  }, [location, navigate]);
 
-  const submit = data => {
-    setMessage(false)
     setLoader(true);
-    const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/auth/login`;
-    axios.post(URL, data)
-      .then(res => {
-        localStorage.setItem('token', res.data.token);
-        getUserbyId(dispatch);
-        setIsLogged(true); 
-        setLoader(false);
-       importantAlert('Bienvenido', 'success')
-      })
-      .catch(err => {
-        console.log(err.response);
-        setMessage(err.response.data.message);
-        setLoader(false);
-        Swal.fire({
-          icon: 'error',
-          title: 'Algo anda mal',
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
+
+   axios.post(`${import.meta.env.VITE_API_SERVER}/api/v1/auth/register`, data)
+        .then(res => {
+            setLoader(false);
+            Swal.fire({
+            icon: 'success',
+            title: 'Usuario registrado',
+            text: 'Usuario registrado con éxito. Inicia sesión para continuar.'
+            });
+            reset();
+        })
+        .catch(err => {
+            console.log(err)
+            setLoader(false);
+            Swal.fire({
+            icon: 'error',
+            title: 'Error al registrar',
+            text: 'Ocurrió un error al registrar el usuario. Por favor intenta de nuevo.'
+            });
         });
-      });
-    reset({ password: '' });
   };
 
   const startWithGoogle = () => {
     window.location.href = `${import.meta.env.VITE_API_SERVER}/api/v1/auth/google`;
   };
-
-  if (isLogged) {
-    return <Navigate to='/dashboard' />;
-  }
   return (
-  <div className='bg-white'>
+    <>
+      <div className='bg-white'>
   <div className="container position-sticky z-index-sticky top-0">
     <div className="row">
       <div className="col-12">
@@ -102,34 +61,70 @@ const Login = () => {
       <div className="page-header min-vh-75">
         <div className="container">
           <div className="row">
-            <div className="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
+            <div className="col-xl-6 col-lg-6 col-md-12 d-flex flex-column mx-auto">
               <div className="card card-plain mt-8">
                 <div className="card-header pb-0 text-left bg-transparent">
                   <h3 className="font-weight-bolder text-info text-gradient">Bienvenido</h3>
                   <p className="mb-0">Sistema de Administración de Hoteles</p>
                 </div>
-
-
-
                 <div className="card-body">
-                  <form role="form" onSubmit={handleSubmit(submit)}>
-                    <label>Usuario o Correo</label>
-                    <div className="mb-3">
-                    <input 
-                  {...register('email')}  type="email" className="form-control" placeholder="Usuario o correo" aria-label="Email" aria-describedby="email-addon" />
-                    </div>
-                    <label>Contraseña</label>
-                    <div className="mb-3">
-                    <input 
-                  {...register('password')}  type='password' className="form-control" placeholder="Contraseña" aria-label="Password" aria-describedby="password-addon" />
-                    </div>
-                    <div className="mb-3 text-center">
-                      <label className="form-check-label text-danger" htmlFor="rememberMe">{message}</label>
-                    </div>
-                    <div className="text-center">
-                      <button type="submit" className="btn bg-gradient-info w-100 mt-4 mb-0">Iniciar</button>
-                    </div>
-                  </form>
+                 
+                <div className="container mt-5">
+      <h2 className="text-center mb-4">Registrar Usuario</h2>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="mb-3">
+          <label>Nombre:</label>
+          <input className="form-control" {...register('firstName', { required: true })} />
+          {errors.firstName && <span className="text-danger">Este campo es obligatorio</span>}
+        </div>
+
+        <div className="mb-3">
+          <label>Apellido:</label>
+          <input className="form-control" {...register('lastName')} />
+        </div>
+
+        <div className="mb-3">
+          <label>Email:</label>
+          <input className="form-control" type="email" {...register('email', { required: true })} />
+          {errors.email && <span className="text-danger">Este campo es obligatorio</span>}
+        </div>
+
+        <div className="mb-3">
+          <label>Contraseña:</label>
+          <input className="form-control" type="password" {...register('password', { required: true })} />
+          {errors.password && <span className="text-danger">Este campo es obligatorio</span>}
+        </div>
+
+        <div className="mb-3">
+          <label>Teléfono:</label>
+          <input className="form-control" type="tel" {...register('phone')} />
+        </div>
+
+        <div className="mb-3">
+          <label>Fecha de nacimiento:</label>
+          <input className="form-control" type="date" {...register('birthday')} />
+        </div>
+
+        <div className="mb-3">
+          <label>Género:</label>
+          <select className="form-control" {...register('gender')}>
+            <option value="">Seleccionar</option>
+            <option value="male">Masculino</option>
+            <option value="female">Femenino</option>
+            <option value="other">Otro</option>
+          </select>
+        </div>
+
+        <div className="mb-3">
+          <label>País:</label>
+          <input className="form-control" {...register('country')} />
+        </div>
+
+        <button type="submit" className="btn bg-gradient-info w-100 mt-4 mb-0" disabled={loader}>
+          {loader ? 'Registrando...' : 'Registrar Usuario'}
+        </button>
+      </form>
+    </div>
                 </div>
                 <div className="card-footer text-center pt-0 px-lg-2 px-1">
 
@@ -157,8 +152,8 @@ const Login = () => {
   </div>
 </div>
                   <p className="mb-4 text-sm mx-auto">
-                    ¿Aún no tienes una cuenta?
-                    <Link to={'/signup'} className="text-info text-gradient font-weight-bold"> Crear usuario</Link>
+                    ¿Ya tienes una cuenta?
+                    <Link to={'/login'} className="text-info text-gradient font-weight-bold"> Iniciar con mi usuario</Link>
                   </p>
                 </div>
               </div>
@@ -180,8 +175,9 @@ const Login = () => {
   {/* Github buttons */}
   {/* Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc */}
 </div>
+    
+    </>
+  );
+};
 
-  )
-}
-
-export default Login
+export default RegisterUser;

@@ -62,6 +62,8 @@ const RoomDetailsUpdate = ({ room, getRoomsInfo, setEditing }) => {
         }
       })
       .catch((error) => {
+
+        console.log(error)
         Swal.fire({
           icon: "error",
           title: "Error al actualizar",
@@ -124,14 +126,14 @@ const RoomDetailsUpdate = ({ room, getRoomsInfo, setEditing }) => {
           <div className="form-group mb-3">
             <label htmlFor="ubication" className="form-label">Ubicación</label>
             <select className="form-control"  onChange={(e) => handleInputChange("ubication", e.target.value)}>
-              {console.log(areas)}
+
+              <option value={''}>No Definido</option>
             {
               areas?.rows?.map((ubication)=>
               <option selected={room.ubication ==ubication.id?true:false } key={ubication.id} value={ubication.id}>{ubication.name}</option>
               )
             }
             </select>
-
           </div>
           <div className="form-group">
             <label htmlFor="description" className="form-label">Descripción</label>

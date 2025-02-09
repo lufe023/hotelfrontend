@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import getConfig from "../../utils/getConfig";
+import FirmaCliente from "./FirmaCliente";
 
 const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago }) => {
   //const [metodoPago, setMetodoPago] = useState("Efectivo");
@@ -31,32 +32,31 @@ const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago })
             type="text" 
             id="buscar-cliente-input" 
             class="form-control" 
-            placeholder="Buscar persona por Nombre, apellido o teléfono" 
+            placeholder="Buscar persona por Nombre, Apellido o Teléfono" 
           />
         </div>
-        <ul id="buscar-cliente-list" class="list-group mt-3" style="min-height: 330px; overflow-y: auto;">
-        </ul>
+        <ul id="buscar-cliente-list" class="list-group mt-3" style="min-height: 330px; overflow-y: auto;"></ul>
+        <button id="agregar-usuario-btn" class="btn btn-success w-100" style="display: block;">Agregar Usuario</button>
       `,
       showConfirmButton: false,
       showCloseButton: true,
       didOpen: () => {
         const input = document.getElementById("buscar-cliente-input");
         const list = document.getElementById("buscar-cliente-list");
+        const addUserButton = document.getElementById("agregar-usuario-btn");
         const now = new Date();
   
         const updateList = (users) => {
-          list.innerHTML = ""; // Limpiar la lista antes de agregar nuevos elementos
+          list.innerHTML = ""; 
   
           users.forEach((user) => {
-            // Verificar si el cliente tiene una reserva aprobada dentro de la fecha actual
             const reservation = user.reservations?.find(
               (res) =>
                 res.status === "Approved" &&
-                new Date(res.checkIn) <= now && // Cambié `startDate` a `checkIn`
-                new Date(res.checkOut) >= now // Cambié `endDate` a `checkOut`
+                new Date(res.checkIn) <= now &&
+                new Date(res.checkOut) >= now
             );
   
-            // Crear un elemento de lista para el cliente
             const item = document.createElement("li");
             item.className = `list-group-item d-flex text-left hover cursor-pointer`;
   
@@ -82,30 +82,107 @@ const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago })
               </div>
             `;
   
-            // Agregar evento al hacer clic en el cliente
             item.addEventListener("click", () => {
-              setCliente({ ...user }); // Seleccionar cliente y cerrar el modal
+              setCliente({ ...user });
               Swal.close();
             });
   
-            // Agregar el cliente a la lista
             list.appendChild(item);
           });
         };
   
-        // Escuchar eventos de entrada en el input de búsqueda
         input.addEventListener("input", (e) => {
           const searchWord = e.target.value.trim();
           if (searchWord) {
-            findPeople(searchWord, updateList); // Buscar personas y actualizar la lista
+            findPeople(searchWord, updateList);
           } else {
-            updateList([]); // Limpiar la lista si no hay búsqueda
+            updateList([]);
           }
+        });
+  
+        addUserButton.addEventListener("click", () => {
+          const searchWord = input.value.trim();
+          Swal.close();
+          agregarUsuario(searchWord); // Llamar la función para agregar usuario con el nombre de búsqueda
         });
       },
     });
   };
   
+  const agregarUsuario = (preFilledName = "") => {
+    Swal.fire({
+      title: 'Agregar Nuevo Usuario',
+      html: `
+        <input type="text" id="firstName" class="swal2-input" placeholder="Nombre" required value="${preFilledName}">
+        <input type="email" id="email" class="swal2-input" placeholder="Correo Electrónico">
+        <input type="tel" id="phone" class="swal2-input" placeholder="Teléfono" required>
+        <input type="date" id="birthday" class="swal2-input" placeholder="Fecha de Nacimiento">
+        <select id="gender" class="swal2-input">
+          <option value="">Seleccionar Género</option>
+          <option value="male">Masculino</option>
+          <option value="female">Femenino</option>
+          <option value="other">Otro</option>
+        </select>
+      `,
+      focusConfirm: false,
+      preConfirm: () => {
+        const firstName = Swal.getPopup().querySelector('#firstName').value;
+        const email = Swal.getPopup().querySelector('#email').value;
+        const phone = Swal.getPopup().querySelector('#phone').value;
+        const birthday = Swal.getPopup().querySelector('#birthday').value;
+        const gender = Swal.getPopup().querySelector('#gender').value;
+  
+        if (!firstName || !phone) {
+          Swal.showValidationMessage(`Por favor ingresa el nombre y el teléfono`);
+          return;
+        }
+  
+        return { firstName, email, phone, birthday, gender };
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const { firstName, email, phone, birthday, gender } = result.value;  
+        axios.post(`${import.meta.env.VITE_API_SERVER}/api/v1/users/createClient`, {
+          firstName, email, phone, birthday, gender
+        }, getConfig())
+        .then(response => {
+          const data = response.data;
+  
+          if (data.user) {
+            Swal.fire({
+              title: 'Cliente Existente',
+              html: `
+                <p>El cliente ya existe con los siguientes datos:</p>
+                <ul>
+                  <li class="list-group-item d-flex text-left">Nombre: ${data.user.firstName} ${data.user.lastName || ''}</li>
+                  <li class="list-group-item d-flex text-left">Email: ${data.user.email}</li>
+                  <li class="list-group-item d-flex text-left">Teléfono: ${data.user.phone}</li>
+                </ul>
+                <p>¿Quieres usar estos datos de cliente?</p>
+              `,
+              showCancelButton: true,
+              confirmButtonText: 'Si, usar',
+              cancelButtonText: 'Cancelar',
+            })
+            .then((result) => {
+              if (result.isConfirmed) {
+                setCliente(data.user);
+              }
+            });
+          } else {
+            setCliente({ firstName: data.user.firstName, telefono:data.user.phone, email: "" });
+            Swal.fire('Usuario Creado', 'El usuario ha sido creado con éxito.', 'success');
+          }
+        })
+        .catch(error => {
+          Swal.fire('Error', 'Hubo un problema al crear el usuario.', 'error');
+          console.error('Error:', error);
+        });
+      }
+    });
+  };
+  
+ 
 
   const seleccionarMetodoPago = () => {
     Swal.fire({
@@ -233,10 +310,14 @@ const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago })
   return (
     <div className="row">
       <div className="col-md-4">
-  <a className="btn btn-primary w-100 mb-3" onClick={handleBuscarCliente}>
-    Cliente
-  </a>
-
+        <div className="col-12 gap-2 d-flex ">
+          
+     <a className="btn btn-primary w-50" onClick={handleBuscarCliente}>
+    Buscar Cliente
+      </a>
+  <a className="btn btn-primary w-50" onClick={()=>agregarUsuario("")}>Registrar CLiente</a>
+ 
+  </div>
   {cliente && (
     <div className="d-flex align-items-center mb-3 border-radius-lg p-3 border" onClick={handleBuscarCliente}>
       <div className="avatar me-3">
@@ -288,6 +369,7 @@ const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago })
         </div>
       </div>
       <div className="col-md-4">
+        <FirmaCliente/>
       <button className="btn btn-lg btn-success w-100" onClick={finalizarVenta}>
           Finalizar Venta - Total: ${total.toFixed(2)}
         </button>

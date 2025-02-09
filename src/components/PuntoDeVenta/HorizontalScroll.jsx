@@ -53,7 +53,8 @@ const HorizontalScroll = ({ children }) => {
       style={{
         display: "flex",
         overflowX: "auto",
-        WebkitOverflowScrolling: "touch", // Suavizar desplazamiento en móviles
+        overscrollBehavior: "contain",
+        scrollSnapType: "x mandatory",
       }}
     >
       {React.Children.map(children, (child) =>

@@ -4,8 +4,8 @@ import Swal from "sweetalert2";
 import getConfig from "../../../utils/getConfig";
 
 
-const AreasManager = () => {
-  const [areas, setAreas] = useState([]); // Lista de áreas
+const AreasManager = ({areas, fetchAreas}) => {
+
   const [newArea, setNewArea] = useState(""); // Estado para nueva área
   const [editingArea, setEditingArea] = useState(null); // Área en edición
   const [updatedAreaName, setUpdatedAreaName] = useState(""); // Nombre actualizado para el área en edición
@@ -17,20 +17,7 @@ const AreasManager = () => {
     fetchAreas();
   }, []);
 
-  const fetchAreas = () => {
-    axios
-      .get(`${import.meta.env.VITE_API_SERVER}/api/v1/areas`, getConfig())
-      .then((response) => {
-        setAreas(response.data);
-      })
-      .catch((error) => {
-        Swal.fire({
-          icon: "error",
-          title: "Error al cargar áreas",
-          text: error.response?.data?.message || "No se pudieron cargar las áreas",
-        });
-      });
-  };
+
 
   // Crear una nueva área
   const handleCreateArea = () => {
@@ -181,7 +168,10 @@ const AreasManager = () => {
 </div>
 </div>
           <h6 className="text-body text-xs font-weight-bolder">Áreas</h6>
-          <ul className="list-group mb-4 ">
+          <div className=" p-2 ps--scrolling-y scroll scrollHistory" style={{maxHeight:"350px", overflow:"scroll"}}>
+
+       
+          <ul className="list-group mb-4 " >
             {areas?.rows?.map((area) => (
               <li key={area.id} className="list-group-item border-0 shadow d-flex p-2 mb-3 bg-gray-100">
                 <div className="col-7">
@@ -250,6 +240,7 @@ const AreasManager = () => {
               </li>
             ))}
           </ul>
+          </div>
          
         </div>
       </div>

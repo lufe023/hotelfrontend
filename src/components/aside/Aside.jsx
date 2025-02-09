@@ -1,12 +1,30 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {useMenu} from '../../utils/MenuContext'
+
 import './aside.css'
 import Swal from 'sweetalert2';
 import {Link, NavLink, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 const Aside = () => {
-  const { isPinned } = useMenu(); 
-  const { toggleMenu, setIsPinned } = useMenu();
+  const { isPinned, toggleMenu, setIsPinned } = useMenu();
   const navigate = useNavigate();
+  const [siteInformation, setSiteInformation] = useState('')
+
+  useEffect(() => {
+    if (!siteInformation) {
+      fetchSiteInformation();
+    }
+  }, [siteInformation]);
+  console.log(siteInformation)
+  const fetchSiteInformation = async () => {
+    try {
+      const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/configurations/siteInformation/${import.meta.env.VITE_CONFIG_ID}`;
+      const { data } = await axios.get(URL);
+      setSiteInformation(data);
+    } catch (error) {
+      console.error("Error fetching site information:", error);
+    }
+  };
 
   const LogGoutConfirm = ()=>{
     Swal.fire({
@@ -31,7 +49,7 @@ const Aside = () => {
           setIsPinned(null);
         }
       };
-    
+
       useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
@@ -48,11 +66,11 @@ const Aside = () => {
 >
   <div className="sidenav-header">
     <i onClick={toggleMenu} className="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-xl-none" aria-hidden="true" id="iconSidenav" />
-    <a className="navbar-brand m-0" href=" https://demos.creative-tim.com/soft-ui-dashboard/pages/dashboard.html " target="_blank">
-      <img src="./src/assets/img/logo-ct-dark.png" className="navbar-brand-img h-100" alt="main_logo" />
-      <span className="ms-1 font-weight-bold">H&R Las Marias</span>
-      <span className="ms-1 d-block font-weight-light">El Oasis del Sur</span>
-    </a>
+    <Link className="navbar-brand m-0" to={'/'}>
+      <img src={siteInformation?.logoUrl} className="navbar-brand-img h-100" alt="main_logo" />
+      <span className="ms-1 font-weight-bold">{siteInformation?.businessName}</span>
+      <span className="ms-1 d-block font-weight-light">{siteInformation?.slogan}</span>
+    </Link>
   </div>
   <hr className="horizontal dark mt-4" />
 

@@ -11,6 +11,11 @@ import HorizontalScroll from "./HorizontalScroll";
 const PuntoDeVenta = () => {
   const LOCAL_STORAGE_KEY = "puntoDeVentaTabs";
   const scrollContainerRef = useRef(null);  // Referencia al contenedor del scroll
+  const tabRefs = useRef({});
+  const [isDragging, setIsDragging] = useState(false);
+  const dragTimeout = useRef(null);
+  const [activeTab, setActiveTab] = useState(1); // ID del tab activo
+  const [busqueda, setBusqueda] = useState("");
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -42,10 +47,6 @@ const PuntoDeVenta = () => {
       : [{ id: 1, cliente: { firstName: "No registrado", telefono: "1", email: "" }, carrito: [], total: 0 }];
   });
 
-  const [activeTab, setActiveTab] = useState(1); // ID del tab activo
-  const [busqueda, setBusqueda] = useState("");
-  const divRef = useRef(null);
-  const [altura, setAltura] = useState(0);
 
   const { isPinned } = useMenu();
 
@@ -53,12 +54,6 @@ const PuntoDeVenta = () => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(tabs));
   }, [tabs]);
 
-  const actualizarAltura = () => {
-    if (divRef.current) {
-      const nuevaAltura = divRef.current.offsetHeight;
-      setAltura(nuevaAltura);
-    }
-  };
 
   useEffect(() => {
     const storedTabs = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -67,18 +62,13 @@ const PuntoDeVenta = () => {
     setActiveTab(tabsInicializados.length ? tabsInicializados[tabsInicializados.length - 1].id : 1);
   }, []);
 
-  useEffect(() => {
-    actualizarAltura();
-    window.addEventListener("resize", actualizarAltura);
-
-    return () => {
-      window.removeEventListener("resize", actualizarAltura);
-    };
-  }, []);
 
   // Cambiar entre tabs
   const cambiarTab = (id) => {
     setActiveTab(id);
+    if (tabRefs.current[id]) {
+      tabRefs.current[id].scrollIntoView({ behavior: 'smooth', inline: 'center' });
+    }
   };
 
 // Añadir un nuevo tab
@@ -103,10 +93,15 @@ const agregarTab = () => {
 
     // Hacer que el nuevo tab sea el activo
     setActiveTab(nuevoId);
-
     return nuevosTabs;
   });
 };
+
+useEffect(() => {
+  if (activeTab !== null && tabRefs.current[activeTab]) {
+    tabRefs.current[activeTab].scrollIntoView({ behavior: 'smooth', inline: 'center' });
+  }
+}, [tabs, activeTab]);
 
 const cerrarTab = (id) => {
   const tabToClose = tabs.find(tab => tab.id === id);
@@ -190,26 +185,40 @@ const eliminarTab = (id) => {
   const handleMouseDown = (e, id) => {
     if (e.button === 1) { // 1 es el botón del medio (rueda del mouse)
       cerrarTab(id);
+    } else {
+      setIsDragging(false);
+      dragTimeout.current = setTimeout(() => {
+        setIsDragging(true);
+      }, 200); // Ajusta el tiempo según sea necesario
     }
   };
 
+  const handleMouseUp = (e, id) => {
+    clearTimeout(dragTimeout.current);
+    if (!isDragging) {
+      cambiarTab(id);
+    }
+    setIsDragging(false);
+  };
   return (
-    <div className={`g-sidenav-show ${isPinned ? "g-sidenav-pinned" : ""}`} style={{ userSelect: "none" }}>
+    <div className={` g-sidenav-show ${isPinned ? "g-sidenav-pinned" : ""}`} style={{ userSelect: "none" }}>
       
-    <div className='top-0 z-index-sticky' 
-    style={{  width:"100%", margin:'auto',  boxSizing: "border-box",   marginBottom:"0px", position:'fixed'}}>
-    
-    <PMenu busqueda={busqueda} setBusqueda={setBusqueda} />
-      <div className="mb-4 p-2 bg-white" style={{ backdropFilter: "blur(15px)", width: "100%" }}>
+      <div className="top-0" style={{ width: "100%", margin: 'auto', boxSizing: "border-box", marginBottom: "0px", position: 'fixed', zIndex: 1000 }}>
+      <div style={{ position: 'relative', zIndex: 2 }}>
+  <PMenu busqueda={busqueda} setBusqueda={setBusqueda} />
+</div>
+
+      <div className=" p-2 bg-white" style={{ backdropFilter: "blur(15px)", width: "100%", zIndex: 1}}>
         <HorizontalScroll ref={scrollContainerRef}>
           {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              className={`btn btn-sm me-2 mb-0 ${activeTab === tab.id ? "btn-primary" : "btn-light"}`}
-              onClick={() => cambiarTab(tab.id)}
-              style={{ minWidth: "200px", minHeight: "50px" }}
-              onMouseDown={(e) => handleMouseDown(e, tab.id)}
-            >
+        <button
+        key={tab.id}
+        ref={(el) => (tabRefs.current[tab.id] = el)}
+        className={`btn btn-sm me-2 mb-0 ${activeTab === tab.id ? "btn-primary" : "btn-light"}`}
+        onMouseDown={(e) => handleMouseDown(e, tab.id)}
+        onMouseUp={(e) => handleMouseUp(e, tab.id)}
+        style={{ minWidth: "200px", minHeight: "50px" }}
+      >
               {tab.cliente.firstName || "Venta"}
               <span
                 className="ms-2 text-danger"
@@ -218,26 +227,36 @@ const eliminarTab = (id) => {
                   cerrarTab(tab.id);
                 }}
               >
+                
                 ✖
               </span>
             </button>
           ))}
-          <button
-            className="btn btn-sm btn-success ms-2 mb-0"
+  <button
+            className="btn btn-sm btn-success mb-0"
             onClick={agregarTab}
-            style={{ minWidth: "200px", minHeight: "50px" }}
+            style={{
+              minWidth: "150px",
+              minHeight: "50px",
+              position: "sticky",
+              right: "-25px",
+              top: "auto",
+              alignItems: "center",
+              display: "flex",
+            }}
           >
-            + Nueva Venta
+         
+           <i className="fas fa-plus-square" 
+           style={{ fontSize: "20px", fontWeight: "bold", marginRight:"5px"}}/> Nueva Venta
+            
           </button>
         </HorizontalScroll>
       </div>
-          </div>
+    </div>
 
       <main className="main-content max-height-vh-100 h-100 border-radius-lg pt-9 p-2">
-        <div className="container-fluid p-2">
+        <div className="container-fluid p-2 ">
           {/* Sistema de tabs */}
-      
-
           <div className="row gx-2 gy-3">
             {/* Lista de productos */}
             <div className="col-lg-8">
@@ -289,7 +308,7 @@ const eliminarTab = (id) => {
           </div>
         </div>
 
-        <div ref={divRef} className="bg-white border p-3" style={{ minHeight: "25vh", width: "100%" }}>
+        <div className="bg-white border p-3" style={{ minHeight: "25vh", width: "100%" }}>
           <OpcionesPOS
             total={tabActivo?.total || 0}
             cliente={tabActivo?.cliente || { firstName: "", telefono: "", email: "" }}
