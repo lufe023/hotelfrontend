@@ -7,6 +7,8 @@ import PMenu from "./PMenu";
 import "./PuntoDeVenta.css";
 import Swal from 'sweetalert2';
 import HorizontalScroll from "./HorizontalScroll";
+import { cargarFavoritos } from "./logicaFavoritos";
+import { findItem } from "./findProducts";
 
 const PuntoDeVenta = () => {
   const LOCAL_STORAGE_KEY = "puntoDeVentaTabs";
@@ -16,20 +18,17 @@ const PuntoDeVenta = () => {
   const dragTimeout = useRef(null);
   const [activeTab, setActiveTab] = useState(1); // ID del tab activo
   const [busqueda, setBusqueda] = useState("");
+  const [productos, setProductos] = useState([])
+  const [favoritos, setFavoritos] = useState([]);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      switch (e.key) {
-        case 'F12':
-          // Aquí puedes ejecutar la función para finalizar la compra
-          finalizarCompra();
-          break;
-        case 'F6':
-          // Aquí puedes ejecutar la función para abrir una nueva tab
-          agregarTab();
-          break;
-        default:
-          break;
+      if (e.key === 'F6') {
+        e.preventDefault(); // Evita que el navegador capture la tecla
+        agregarTab();
+      } else if (e.key === 'F12') {
+        e.preventDefault();
+        finalizarCompra();
       }
     };
   
@@ -47,12 +46,29 @@ const PuntoDeVenta = () => {
       : [{ id: 1, cliente: { firstName: "No registrado", telefono: "1", email: "" }, carrito: [], total: 0 }];
   });
 
-
   const { isPinned } = useMenu();
 
+//cargando productos favoritos
   useEffect(() => {
+    cargarFavoritos(setFavoritos);
+}, []);
+
+
+//llamando las tabs almacenadass
+useEffect(() => {
+  const storedTabs = localStorage.getItem(LOCAL_STORAGE_KEY);
+  if (storedTabs) {
+    const parsedTabs = JSON.parse(storedTabs);
+    setTabs(parsedTabs);
+    setActiveTab(parsedTabs.length ? parsedTabs[parsedTabs.length - 1].id : 1);
+  }
+}, []);
+
+useEffect(() => {
+  if (tabs.length > 0) {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(tabs));
-  }, [tabs]);
+  }
+}, [tabs]);
 
 
   useEffect(() => {
@@ -73,14 +89,10 @@ const PuntoDeVenta = () => {
 
 // Añadir un nuevo tab
 const agregarTab = () => {
-  // Encontrar el primer id disponible
-  let nuevoId = 1;
-  while (tabs.some(tab => tab.id === nuevoId)) {
-    nuevoId++;
-  }
-
-  // Crear el nuevo tab
   setTabs((prevTabs) => {
+    // Obtener el último id usado y sumarle 1
+    const nuevoId = prevTabs.length > 0 ? Math.max(...prevTabs.map(tab => tab.id)) + 1 : 1;
+
     const nuevosTabs = [
       ...prevTabs,
       {
@@ -91,29 +103,30 @@ const agregarTab = () => {
       },
     ];
 
-    // Hacer que el nuevo tab sea el activo
     setActiveTab(nuevoId);
     return nuevosTabs;
   });
 };
 
+//centrando tab seleccionada
 useEffect(() => {
   if (activeTab !== null && tabRefs.current[activeTab]) {
     tabRefs.current[activeTab].scrollIntoView({ behavior: 'smooth', inline: 'center' });
   }
 }, [tabs, activeTab]);
 
-const cerrarTab = (id) => {
+const cerrarTabConfirmation = (id) => {
   const tabToClose = tabs.find(tab => tab.id === id);
 
   // Si el tab tiene productos en el carrito, preguntar confirmación
   if (tabToClose && tabToClose.carrito.length > 0) {
     Swal.fire({
       title: '¿Estás seguro?',
-      text: `${tabToClose.cliente.firstName} tiene productos en la comanda. Si lo cierras, se perderá la selección.`,
+      html: `<b>${tabToClose.cliente.firstName}</b> tiene productos en la comanda. Si lo cierras, se perderá la selección.`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, cerrar tab',
+      confirmButtonColor:'#ef4444',
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
@@ -128,36 +141,15 @@ const cerrarTab = (id) => {
 
 // Función para eliminar el tab después de la confirmación
 const eliminarTab = (id) => {
-  // Eliminar el tab seleccionado
-  const updatedTabs = tabs.filter((tab) => tab.id !== id);
+  const updatedTabs = tabs.filter(tab => tab.id !== id);
 
   if (updatedTabs.length === 0) {
-    // Si ya no quedan tabs, crear uno nuevo automáticamente
-    const nuevoTab = {
-      id: 1,
-      cliente: { firstName: 'No registrado 1', telefono: '1', email: '' },
-      carrito: [],
-      total: 0,
-    };
-    setTabs([nuevoTab]);
+    setTabs([{ id: 1, cliente: { firstName: "No registrado", telefono: "1", email: "" }, carrito: [], total: 0 }]);
     setActiveTab(1);
-    return; // Terminar la función aquí, ya que no hay más lógica necesaria
+  } else {
+    setActiveTab(updatedTabs[updatedTabs.length - 1].id);
+    setTabs(updatedTabs);
   }
-
-  // Reordenar los ids de los tabs si quedan tabs
-  const reindexedTabs = updatedTabs.map((tab, index) => ({
-    ...tab,
-    id: index + 1, // Reasigna los IDs para no dejar gaps
-  }));
-
-  // Si el tab eliminado era el activo, seleccionar el siguiente o el último
-  let newActiveTab = reindexedTabs[0]?.id || 1;
-  if (id === activeTab) {
-    newActiveTab = reindexedTabs.length ? reindexedTabs[reindexedTabs.length - 1].id : 1;
-  }
-
-  setTabs(reindexedTabs);
-  setActiveTab(newActiveTab);
 };
 
   const tabActivo = tabs.find((tab) => tab.id === activeTab);
@@ -184,7 +176,7 @@ const eliminarTab = (id) => {
 
   const handleMouseDown = (e, id) => {
     if (e.button === 1) { // 1 es el botón del medio (rueda del mouse)
-      cerrarTab(id);
+      cerrarTabConfirmation(id);
     } else {
       setIsDragging(false);
       dragTimeout.current = setTimeout(() => {
@@ -200,17 +192,42 @@ const eliminarTab = (id) => {
     }
     setIsDragging(false);
   };
+
+
+  const setCarrito = (nuevoCarrito) => {
+    setTabs(
+      tabs?.map((tab) =>
+        tab.id === activeTab ? { ...tab, carrito: nuevoCarrito } : tab
+      )
+    )
+  }
+
+  const total= tabActivo?.total || 0
+
+  const setTotal= (nuevoTotal) =>{
+    setTabs(
+      tabs.map((tab) =>
+        tab.id === activeTab ? { ...tab, total: nuevoTotal } : tab
+      )
+    )
+  }
+
   return (
     <div className={` g-sidenav-show ${isPinned ? "g-sidenav-pinned" : ""}`} style={{ userSelect: "none" }}>
       
       <div className="top-0" style={{ width: "100%", margin: 'auto', boxSizing: "border-box", marginBottom: "0px", position: 'fixed', zIndex: 1000 }}>
       <div style={{ position: 'relative', zIndex: 2 }}>
-  <PMenu busqueda={busqueda} setBusqueda={setBusqueda} />
+  <PMenu busqueda={busqueda} setBusqueda={setBusqueda} 
+  productos={productos}
+  setProductos={setProductos}
+  carrito={tabActivo?.carrito || []}
+  setCarrito={setCarrito}
+  />
 </div>
 
       <div className=" p-2 bg-white" style={{ backdropFilter: "blur(15px)", width: "100%", zIndex: 1}}>
         <HorizontalScroll ref={scrollContainerRef}>
-          {tabs.map((tab) => (
+        {tabs.map((tab) => (
         <button
         key={tab.id}
         ref={(el) => (tabRefs.current[tab.id] = el)}
@@ -224,7 +241,7 @@ const eliminarTab = (id) => {
                 className="ms-2 text-danger"
                 onClick={(e) => {
                   e.stopPropagation();
-                  cerrarTab(tab.id);
+                  cerrarTabConfirmation(tab.id);
                 }}
               >
                 
@@ -232,7 +249,7 @@ const eliminarTab = (id) => {
               </span>
             </button>
           ))}
-  <button
+          <button
             className="btn btn-sm btn-success mb-0"
             onClick={agregarTab}
             style={{
@@ -245,9 +262,8 @@ const eliminarTab = (id) => {
               display: "flex",
             }}
           >
-         
-           <i className="fas fa-plus-square" 
-           style={{ fontSize: "20px", fontWeight: "bold", marginRight:"5px"}}/> Nueva Venta
+            <i className="fas fa-plus-square" 
+            style={{ fontSize: "20px", fontWeight: "bold", marginRight:"5px"}}/> Nueva Venta
             
           </button>
         </HorizontalScroll>
@@ -262,18 +278,14 @@ const eliminarTab = (id) => {
             <div className="col-lg-8">
               <div className="card shadow">
                 <div className="card-body pb-0">
-                  <ListaProductosPOS
-                    carrito={tabActivo?.carrito || []}
-                    setCarrito={(nuevoCarrito) =>
-                      setTabs(
-                        tabs.map((tab) =>
-                          tab.id === activeTab ? { ...tab, carrito: nuevoCarrito } : tab
-                        )
-                      )
-                    }
-                    busqueda={busqueda}
-                    setBusqueda={setBusqueda}
-                  />
+                <ListaProductosPOS
+                carrito={tabActivo?.carrito || []}
+                setCarrito={setCarrito}
+                productos={productos}
+                busqueda={busqueda}
+                setFavoritos={setFavoritos}
+                favoritos={favoritos}
+            />
                 </div>
               </div>
             </div>
@@ -287,20 +299,8 @@ const eliminarTab = (id) => {
                 <div className="card-body">
                   <CarritoPOS
                     carrito={tabActivo?.carrito || []}
-                    setCarrito={(nuevoCarrito) =>
-                      setTabs(
-                        tabs.map((tab) =>
-                          tab.id === activeTab ? { ...tab, carrito: nuevoCarrito } : tab
-                        )
-                      )
-                    }
-                    setTotal={(nuevoTotal) =>
-                      setTabs(
-                        tabs.map((tab) =>
-                          tab.id === activeTab ? { ...tab, total: nuevoTotal } : tab
-                        )
-                      )
-                    }
+                    setCarrito={setCarrito}
+                    setTotal={setTotal}
                   />
                 </div>
               </div>
@@ -310,7 +310,7 @@ const eliminarTab = (id) => {
 
         <div className="bg-white border p-3" style={{ minHeight: "25vh", width: "100%" }}>
           <OpcionesPOS
-            total={tabActivo?.total || 0}
+            total={total}
             cliente={tabActivo?.cliente || { firstName: "", telefono: "", email: "" }}
             setCliente={(nuevoCliente) =>
               setTabs(

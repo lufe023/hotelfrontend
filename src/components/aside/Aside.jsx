@@ -15,7 +15,6 @@ const Aside = () => {
       fetchSiteInformation();
     }
   }, [siteInformation]);
-  console.log(siteInformation)
   const fetchSiteInformation = async () => {
     try {
       const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/configurations/siteInformation/${import.meta.env.VITE_CONFIG_ID}`;
@@ -157,18 +156,21 @@ const Aside = () => {
           <span className="nav-link-text ms-1">Ventas</span>
         </NavLink>
       </li>
-      <li className="nav-item hover">
-        <Link className="nav-link  " to={'/gallerys'}>
+
+      
+
+      <li className="nav-item ">
+        <NavLink className="nav-link  hover" to={'/invoices'}>
         <div className='icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center '>
-        <svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
-        {/*!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.*/}
-        <path d="M480 416v16c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48h16v208c0 44.1 35.9 80 80 80h336zm96-80V80c0-26.5-21.5-48-48-48H144c-26.5 0-48 21.5-48 48v256c0 26.5 21.5 48 48 48h384c26.5 0 48-21.5 48-48zM256 128c0 26.5-21.5 48-48 48s-48-21.5-48-48 21.5-48 48-48 48 21.5 48 48zm-96 144l55.5-55.5c4.7-4.7 12.3-4.7 17 0L272 256l135.5-135.5c4.7-4.7 12.3-4.7 17 0L512 208v112H160v-48z" />.
-        </svg>
+
+        <svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+        <path d="M377 105L279.1 7c-4.5-4.5-10.6-7-17-7H256v128h128v-6.1c0-6.3-2.5-12.4-7-16.9zm-153 31V0H24C10.7 0 0 10.7 0 24v464c0 13.3 10.7 24 24 24h336c13.3 0 24-10.7 24-24V160H248c-13.2 0-24-10.8-24-24zM64 72c0-4.4 3.6-8 8-8h80c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H72c-4.4 0-8-3.6-8-8V72zm0 80v-16c0-4.4 3.6-8 8-8h80c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H72c-4.4 0-8-3.6-8-8zm144 263.9V440c0 4.4-3.6 8-8 8h-16c-4.4 0-8-3.6-8-8v-24.3c-11.3-.6-22.3-4.5-31.4-11.4-3.9-2.9-4.1-8.8-.6-12.1l11.8-11.2c2.8-2.6 6.9-2.8 10.1-.7 3.9 2.4 8.3 3.7 12.8 3.7h28.1c6.5 0 11.8-5.9 11.8-13.2 0-6-3.6-11.2-8.8-12.7l-45-13.5c-18.6-5.6-31.6-23.4-31.6-43.4 0-24.5 19.1-44.4 42.7-45.1V232c0-4.4 3.6-8 8-8h16c4.4 0 8 3.6 8 8v24.3c11.3 .6 22.3 4.5 31.4 11.4 3.9 2.9 4.1 8.8 .6 12.1l-11.8 11.2c-2.8 2.6-6.9 2.8-10.1 .7-3.9-2.4-8.3-3.7-12.8-3.7h-28.1c-6.5 0-11.8 5.9-11.8 13.2 0 6 3.6 11.2 8.8 12.7l45 13.5c18.6 5.6 31.6 23.4 31.6 43.4 0 24.5-19.1 44.4-42.7 45.1z"/></svg>
         </div>
-          <span className="nav-link-text ms-1">Fotos</span>
-        </Link>
+          <span className="nav-link-text ms-1">Cuentas</span>
+        </NavLink>
       </li>
 
+     
       <li className="nav-item ">
         <NavLink className="nav-link  hover" to={'/admin'}>
         <div className='icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center '>

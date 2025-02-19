@@ -68,7 +68,7 @@ const SistemConfiguration = () => {
         <input
           type="time"
           name="defaultCheckInTime"
-          value={config.defaultCheckInTime}
+          defaultValue={config.defaultCheckInTime}
           onChange={handleInputChange}
           className="form-control"
           disabled={!isEditing}
@@ -79,7 +79,7 @@ const SistemConfiguration = () => {
         <input
           type="time"
           name="defaultCheckOutTime"
-          value={config.defaultCheckOutTime}
+          defaultValue={config.defaultCheckOutTime}
           onChange={handleInputChange}
           className="form-control"
           disabled={!isEditing}
@@ -90,7 +90,7 @@ const SistemConfiguration = () => {
         <input
           type="text"
           name="businessName"
-          value={config.businessName}
+          defaultValue={config.businessName}
           onChange={handleInputChange}
           className="form-control"
           disabled={!isEditing}
@@ -101,7 +101,7 @@ const SistemConfiguration = () => {
         <input
           type="text"
           name="slogan"
-          value={config.slogan}
+          defaultValue={config.slogan}
           onChange={handleInputChange}
           className="form-control"
           disabled={!isEditing}
@@ -112,7 +112,7 @@ const SistemConfiguration = () => {
         <input
           type="url"
           name="logoUrl"
-          value={config.logoUrl}
+          defaultValue={config.logoUrl}
           onChange={handleInputChange}
           className="form-control"
           disabled={!isEditing}
@@ -123,7 +123,7 @@ const SistemConfiguration = () => {
         <input
           type="email"
           name="contactEmail"
-          value={config.contactEmail}
+          defaultValue={config.contactEmail}
           onChange={handleInputChange}
           className="form-control"
           disabled={!isEditing}
@@ -134,7 +134,7 @@ const SistemConfiguration = () => {
         <input
           type="tel"
           name="contactPhone"
-          value={config.contactPhone}
+          defaultValue={config.contactPhone}
           onChange={handleInputChange}
           className="form-control"
           disabled={!isEditing}
@@ -144,7 +144,7 @@ const SistemConfiguration = () => {
         <label className="form-label">Dirección</label>
         <textarea
           name="address"
-          value={config.address}
+          defaultValue={config.address}
           onChange={handleInputChange}
           className="form-control"
           disabled={!isEditing}

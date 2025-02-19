@@ -148,7 +148,7 @@ if(user?.firstName=="Cargando"){
       <div className="input-group p-2">
         <input
         {...register('password')} 
-        autoFocus
+        autoFocus={true}
         id="password" 
         required
         className="form-control no-border"

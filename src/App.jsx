@@ -17,6 +17,8 @@ import AllChats from './components/users/AllChats';
 import Admin from './components/administrator/adminUtils/Admin';
 import ProtectedAdmin from './components/administrator/adminUtils/ProtectedAdmin';
 import PuntoDeVenta from './components/PuntoDeVenta/PuntoDeVenta';
+import InvoiceDetails from './components/invoices/InvoiceDetails';
+import InvoiceLayout from './components/invoices/InvoiceLayout';
 
 function App() {
   const navigate = useNavigate();
@@ -57,9 +59,12 @@ function App() {
           <Route path='/gallerys' element={<SeePictures />} />
           <Route path='/prepare-checking/:id' element={<CheckIn />} />
           <Route path='/ventas' element={<PuntoDeVenta />} />
+          <Route path="/invoices" element={<InvoiceLayout />} />
+          <Route path="/invoices/:id" element={<InvoiceDetails />} />
         </Route>
 
         <Route element={<ProtectedAdmin />}>
+       
           <Route path='/admin' element={<Admin />} />
         </Route>
       </Routes>

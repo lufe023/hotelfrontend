@@ -5,13 +5,12 @@ import getConfig from "../../utils/getConfig";
 import FirmaCliente from "./FirmaCliente";
 
 const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago }) => {
-  //const [metodoPago, setMetodoPago] = useState("Efectivo");
   const [cambio, setCambio] = useState(0);
   const [facturasPendientes, setFacturasPendientes] = useState([
     { id: 1, total: 1200 },
     { id: 2, total: 800 },
   ]); // Simulación de facturas
-
+  
   const findPeople = async (findWord, updateList) => {
     const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/users/userSearch`;
     try {
@@ -236,14 +235,14 @@ const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago })
       Swal.fire("Error", "Seleccione un método de pago.", "error");
       return;
     }
-
+  
     if (metodoPago === "Efectivo") {
       Swal.fire({
         title: "Pago en Efectivo",
         input: "number",
         inputLabel: "¿Cuánto pagó el cliente?",
         inputPlaceholder: "Ingrese el monto recibido",
-        inputValue:  Math.ceil(total),
+        inputValue: Math.ceil(total),
         inputAutoFocus: true,
         showCancelButton: true,
         confirmButtonText: "Calcular Cambio",
@@ -258,40 +257,56 @@ const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago })
           setCambio(result.value - total);
         }
       });
-    } else if (metodoPago === "Factura") {
+    } 
+    else if (metodoPago === "Factura") {
       Swal.fire({
         title: "Facturas Pendientes",
         html: `
-          <div class="form-group">
+          <div class="form-group" style="max-height: 300px; overflow-y: auto;">
             <label for="facturas-select">Selecciona una factura:</label>
-            <select id="facturas-select" class="form-control">
-              <option value="">Nueva Factura</option>
-              ${facturasPendientes
-                .map((factura) => `<option value="${factura.id}">Factura #${factura.id} - Total: $${factura.total}</option>`)
-                .join("")}
-            </select>
+            <div class="form-check">
+              <input type="radio" class="form-check-input" id="factura-nueva" name="factura-pago" value="" checked>
+              <label class="form-check-label" for="factura-nueva">
+                Nueva Factura
+              </label>
+            </div>
+            ${facturasPendientes
+              .map((factura) => `
+                <div class="form-check">
+                  <input type="radio" class="form-check-input" id="factura-${factura.id}" name="factura-pago" value="${factura.id}">
+                  <label class="form-check-label" for="factura-${factura.id}">
+                    Factura #${factura.id} - Total: $${factura.total}
+                  </label>
+                </div>
+              `)
+              .join("")}
           </div>
         `,
         showCancelButton: true,
         confirmButtonText: "Agregar Total",
         preConfirm: () => {
-          const facturaSeleccionada = document.getElementById("facturas-select").value;
-          return facturaSeleccionada;
+          const radios = document.querySelectorAll("input[name='factura-pago']");
+          let selectedFactura = "";
+          radios.forEach((radio) => {
+            if (radio.checked) {
+              selectedFactura = radio.value;
+            }
+          });
+          return selectedFactura;
         },
       }).then((result) => {
         if (result.isConfirmed) {
           const facturaSeleccionada = result.value;
-          if (facturaSeleccionada) {
+          if (facturaSeleccionada === "") {
+            Swal.fire("Nueva Factura", `Se ha creado una nueva factura por $${total.toFixed(2)}`, "success");
+          } else {
             const factura = facturasPendientes.find((f) => f.id.toString() === facturaSeleccionada);
             Swal.fire("Factura Actualizada", `Total agregado a la factura #${factura.id}`, "success");
-          } else {
-            Swal.fire("Nueva Factura", `Se ha creado una nueva factura por $${total.toFixed(2)}`, "success");
           }
         }
       });
-    } else {
-      Swal.fire("Venta Finalizada", `Total: $${total.toFixed(2)}`, "success");
     }
+    
   };
 
   const metodoPagoIcono = () => {

@@ -1,74 +1,94 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { agregarAlCarrito, agregarCantidadAlCarrito, obtenerCantidadTotalEnCarritos, playErrorSound, restarAlCarrito } from "./logicaDelCarrito";
+import Swal from "sweetalert2";
 
 const CarritoPOS = ({ carrito, setCarrito, setTotal }) => {
+  const [cantidadInput, setCantidadInput] = useState({});
+
+  useEffect(() => {
+    // Inicializar los valores del input con las cantidades actuales
+    const cantidadesIniciales = carrito.reduce((acc, item) => {
+      acc[item.id] = item.cantidad;
+      return acc;
+    }, {});
+    setCantidadInput(cantidadesIniciales);
+  }, [carrito]);
+
   const eliminarProducto = (id) => {
     const nuevoCarrito = carrito.filter((item) => item.id !== id);
     setCarrito(nuevoCarrito);
   };
 
-
-  const calcularTotal = (carrito) => {
-    const total = carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
+  const calcularTotal = (nuevoCarrito) => {
+    const total = nuevoCarrito.reduce((acc, item) => acc + Number(item.salePrice) * item.cantidad, 0);
     setTotal(total);
   };
 
-  const actualizarCantidad = (id, cantidad) => {
-    if (cantidad < 1) return;  // Prevenir cantidades menores a 1
-    const nuevoCarrito = carrito.map((item) =>
-      item.id === id ? { ...item, cantidad } : item
-    );
-    setCarrito(nuevoCarrito);
-    calcularTotal(nuevoCarrito);
-  };
+  const actualizarCantidad = (producto, nuevaCantidad) => {
+    const cantidadFinal = Math.max(1, Number(nuevaCantidad)); // Asegurar que no sea menor a 1
 
-  const restarAlCarrito = (producto) => {
-    const productoEnCarrito = carrito.find((item) => item.id === producto.id);
-  
-    if (productoEnCarrito) {
-      if (productoEnCarrito.cantidad > 1) {
-        // Si la cantidad es mayor a 1, simplemente resta 1
-        const nuevoCarrito = carrito.map((item) =>
-          item.id === producto.id
-            ? { ...item, cantidad: item.cantidad - 1 }
-            : item
-        );
-        setCarrito(nuevoCarrito);
-      } else {
-        // Si la cantidad es 1, elimina el producto
-        eliminarProducto(producto.id);
-      }
-    }
-  };
+    // Validar y actualizar la cantidad en el carrito
+    agregarCantidadAlCarrito(carrito, setCarrito, producto, cantidadFinal);
 
-  const agregarAlCarrito = (producto) => {
-    const existeEnCarrito = carrito.find((item) => item.id === producto.id);
+    // Actualizar el estado del input
+    setCantidadInput((prev) => ({ ...prev, [producto.id]: cantidadFinal }));
+};
 
-    if (producto.existencia <= 0) {
-      alert("No hay más unidades disponibles de este producto.");
-      return;
-    }
-
-    if (existeEnCarrito) {
-      if (existeEnCarrito.cantidad >= producto.existencia) {
-        alert("No hay más unidades disponibles de este producto.");
-        return;
-      }
-      const nuevoCarrito = carrito.map((item) =>
-        item.id === producto.id
-          ? { ...item, cantidad: item.cantidad + 1 }
-          : item
-      );
-      setCarrito(nuevoCarrito);
-    } else {
-      setCarrito([...carrito, { ...producto, cantidad: 1 }]);
-    }
+  // Manejar cambios en el input sin afectar inmediatamente el carrito
+  const manejarCambioInput = (producto, valor) => {
+    const cantidad = parseInt(valor) || "";
+    setCantidadInput((prev) => ({ ...prev, [producto.id]: cantidad }));
   };
 
 
-  
+//Aplicar el cambio real cuando el usuario salga del input
+const manejarBlur = (producto) => {
+  // Obtener la cantidad total del producto en todos los carritos (incluyendo este)
+  const { cantidadTotal } = obtenerCantidadTotalEnCarritos(producto.id);
+
+
+  // Obtener la cantidad actual en el carrito actual (usando el prop 'carrito')
+  const productoEnCarritoActual = carrito.find((item) => item.id === producto.id);
+  const cantidadActual = productoEnCarritoActual ? productoEnCarritoActual.cantidad : 0;
+
+
+  // Calcular la cantidad en otros carritos
+  const cantidadOtros = cantidadTotal - cantidadActual;
+
+
+  // La cantidad máxima que puede haber en este carrito es:
+  // stock total del producto menos lo que ya está en otros carritos
+  const maxAllowedInCurrentCart = producto.stock - cantidadOtros;
+
+
+  // La cantidad solicitada por el usuario (valor del input)
+  const cantidadSolicitada = Number(cantidadInput[producto.id]) || 0;
+
+
+  // Si la cantidad solicitada supera lo permitido, se ajusta
+  let cantidadFinal = cantidadSolicitada;
+  if (cantidadFinal > maxAllowedInCurrentCart) {
+    cantidadFinal = maxAllowedInCurrentCart;
+    playErrorSound()
+    Swal.fire({
+      title: "Stock insuficiente",
+      text: `Solo puedes tener hasta ${maxAllowedInCurrentCart} unidades en este carrito.`,
+      icon: "warning",
+      confirmButtonText: "Aceptar",
+      confirmButtonColor: "#22c55e",
+    });
+  }
+
+  // Actualizamos el estado local del input y el carrito actual
+  setCantidadInput((prev) => ({ ...prev, [producto.id]: cantidadFinal }));
+  actualizarCantidad(producto, cantidadFinal);
+
+};
+
+
   useEffect(() => {
     calcularTotal(carrito);
-  }, [carrito]); // Recalcula el total cada vez que el carrito cambia
+  }, [carrito]);
 
   return (
     <div>
@@ -80,12 +100,11 @@ const CarritoPOS = ({ carrito, setCarrito, setTotal }) => {
         <ul className="list-group ps--scrolling-y scroll scrollHistory" style={{ height: "44vh", overflow: "scroll" }}>
           {carrito.map((item) => (
             <li key={item.id} className="list-group-item d-flex align-items-start pb-4 pt-4">
-              {/* Columna izquierda: Detalle del artículo */}
               <div className="col-7 d-flex flex-column justify-content-between" style={{ minHeight: "100%" }}>
                 <div>
-                  <span className="d-block">{item.nombre}</span>
+                  <span className="d-block">{item.name}</span>
                   <small>
-                    ${item.precio.toFixed(2)} x {item.cantidad} = ${(item.cantidad * item.precio).toFixed(2)}
+                    ${Number(item.salePrice).toFixed(2)} x {item.cantidad} = ${(item.cantidad * Number(item.salePrice)).toFixed(2)}
                   </small>
                 </div>
                 <button className="btn btn-danger px-3 mt-2 align-self-start" onClick={() => eliminarProducto(item.id)}>
@@ -93,25 +112,23 @@ const CarritoPOS = ({ carrito, setCarrito, setTotal }) => {
                 </button>
               </div>
 
-              {/* Columna derecha: Botones de control */}
               <div className="col-5 d-flex flex-column justify-content-between align-items-center">
-                {/* Botón de aumentar */}
-                <a className="btn btn-dark cursor-pointer w-100 mb-2" onClick={() => agregarAlCarrito(item)}>
+                <a className="btn btn-dark cursor-pointer w-100 mb-2" onClick={() => agregarAlCarrito(carrito, setCarrito, item)}>
                   <i className="fas fa-plus-square" />
                 </a>
 
-                {/* Input para la cantidad */}
+                {/*Input de cantidad corregido */}
                 <input
                   type="number"
                   min="1"
-                  className="form-control form-control-sm d-inline-block mb-2"
-                  value={item.cantidad}
-                  onChange={(e) => actualizarCantidad(item.id, parseInt(e.target.value) || 1)} // Aseguramos que sea >= 1
+                  className="form-control form-control-sm mx-2 text-center w-100 mb-2"
+                  value={cantidadInput[item.id] || ""}
+                  onChange={(e) => manejarCambioInput(item, e.target.value)}
+                  onBlur={() => manejarBlur(item)}
                 />
 
-                {/* Botón de disminuir */}
-                {item.cantidad > 1 ? (
-                  <a className="btn btn-danger cursor-pointer w-100" onClick={() => restarAlCarrito(item)}>
+                {item.cantidad > 1 ? (                                                              
+                  <a className="btn btn-danger cursor-pointer w-100" onClick={() => restarAlCarrito(carrito, setCarrito, item)}>
                     <i className="fas fa-minus-square" />
                   </a>
                 ) : (

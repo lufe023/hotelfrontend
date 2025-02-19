@@ -9,6 +9,7 @@ import SistemConfiguration from "./SistemConfiguration";
 import CreateRoom from "./CreateRoom";
 import CreateMultipleRooms from "./CreateMultipleRooms";
 import getConfig from "../../../utils/getConfig";
+import InvoiceList from "../../invoices/InvoiceList";
 
 const Admin = () => {
   const { isPinned } = useMenu();
@@ -33,6 +34,8 @@ const Admin = () => {
       <Navbar />
       <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg pt-7">
         <div className="container-fluid py-4">
+
+        
          <div className="row">
         
          <div className="col-lg-8 col-md-6 mb-md-0 mb-4">
