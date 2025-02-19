@@ -64,19 +64,33 @@ const manejarBlur = (producto) => {
   // La cantidad solicitada por el usuario (valor del input)
   const cantidadSolicitada = Number(cantidadInput[producto.id]) || 0;
 
+// Bloquear Enter en el modal de alerta
+const bloquearEnter = (event) => {
+  if (event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
+  }
+};
 
   // Si la cantidad solicitada supera lo permitido, se ajusta
   let cantidadFinal = cantidadSolicitada;
   if (cantidadFinal > maxAllowedInCurrentCart) {
     cantidadFinal = maxAllowedInCurrentCart;
     playErrorSound()
-    Swal.fire({
+    const alert =() =>{ Swal.fire({
       title: "Stock insuficiente",
       text: `Solo puedes tener hasta ${maxAllowedInCurrentCart} unidades en este carrito.`,
       icon: "warning",
       confirmButtonText: "Aceptar",
       confirmButtonColor: "#22c55e",
+      allowOutsideClick:true
+
     });
+  }
+
+    setTimeout(() => {
+      alert()
+  }, 100);
   }
 
   // Actualizamos el estado local del input y el carrito actual
@@ -125,6 +139,7 @@ const manejarBlur = (producto) => {
                   value={cantidadInput[item.id] || ""}
                   onChange={(e) => manejarCambioInput(item, e.target.value)}
                   onBlur={() => manejarBlur(item)}
+                  onKeyDown={ (e) => e.key == 'Enter'? manejarBlur(item):''}
                 />
 
                 {item.cantidad > 1 ? (                                                              

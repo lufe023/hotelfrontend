@@ -30,17 +30,23 @@ function App() {
 
   useEffect(() => {
     const handleRightClick = (event) => {
+      // Evitar navegación atrás si el evento es táctil
+      if (event.pointerType === "touch" || event.type === "touchstart") return;
+  
       event.preventDefault();
-      navigate(-1); // Navegar hacia atrás
+      navigate(-1);
     };
-
-    document.addEventListener('contextmenu', handleRightClick);
-
+  
+    document.addEventListener("contextmenu", handleRightClick);
+    document.addEventListener("touchstart", handleRightClick); 
+  
     return () => {
-      document.removeEventListener('contextmenu', handleRightClick);
+      document.removeEventListener("contextmenu", handleRightClick);
+      document.removeEventListener("touchstart", handleRightClick);
     };
   }, [navigate]);
-
+  
+  
   return (
     <>
       <ScrollToHash />

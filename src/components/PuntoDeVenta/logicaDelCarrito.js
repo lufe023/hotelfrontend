@@ -9,9 +9,10 @@ export const playErrorSound = () => {
     });
 };
 
-// Obtener la cantidad total de un producto en todos los carritos
+// Obtener la cantidad total de un producto en todos los carritos y los carritos que lo contienen
 export const obtenerCantidadTotalEnCarritos = (productoId) => {
     let cantidadTotal = 0;
+    let carritosConProducto = [];
 
     // Obtener todos los carritos desde localStorage
     const puntoDeVentaTabs =
@@ -23,22 +24,23 @@ export const obtenerCantidadTotalEnCarritos = (productoId) => {
         );
         if (productoEnCarrito) {
             cantidadTotal += productoEnCarrito.cantidad || 0; // Evita valores incorrectos
+            carritosConProducto.push(tab);
         }
     });
 
-    return { cantidadTotal };
+    return { cantidadTotal, carritosConProducto };
 };
 
-export const generarMensajeSinStock = (producto, carritosConProducto) => {
-    // Aseguramos que carritosConProducto sea un array
-    const carritosArray = Array.isArray(carritosConProducto)
-        ? carritosConProducto
-        : [];
-
+const generarMensajeSinStock = (producto, carritosConProducto) => {
     // Agrupar por cliente para evitar duplicados
-    const agrupadosPorCliente = carritosArray.reduce((acc, carrito) => {
+    const agrupadosPorCliente = carritosConProducto.reduce((acc, carrito) => {
         const nombreCliente = carrito.cliente.firstName || "No registrado";
-        acc[nombreCliente] = (acc[nombreCliente] || 0) + carrito.cantidad;
+        const cantidad = carrito.carrito.reduce((total, item) => {
+            if (item.id === producto.id) total += item.cantidad;
+            return total;
+        }, 0);
+
+        acc[nombreCliente] = (acc[nombreCliente] || 0) + cantidad;
         return acc;
     }, {});
 
@@ -47,28 +49,24 @@ export const generarMensajeSinStock = (producto, carritosConProducto) => {
         ([cliente]) => cliente !== "Este carrito"
     );
 
-    // Calculamos el total distribuido sumando las cantidades por cliente
-    const totalDistribuido = carritosFiltrados.reduce(
-        (total, [, cantidad]) => total + cantidad,
-        0
-    );
-
-    // Aseguramos que el total distribuido no supere el stock
-    const cantidadDisponible = Math.min(producto.stock, totalDistribuido); // Nunca más de lo que hay en inventario
-
-    // Detalle de carritos por cliente
     const detalleCarritos = carritosFiltrados
         .map(
             ([cliente, cantidad]) => `<li><b>${cliente}:</b> ${cantidad} </li>`
         )
         .join("");
 
+    // Calculamos el total solo con los carritos filtrados
+    const totalDistribuido = carritosFiltrados.reduce(
+        (total, [, cantidad]) => total + cantidad,
+        0
+    );
+
     return `
     <div class='text-start'>
         No hay más unidades disponibles de <b>${producto.name}</b>. 
-        en inventario hay <b>${producto.stock}</b>. Actualmente hay <b>${cantidadDisponible}</b> distribuidas en todas las comandas:
+        Actualmente hay <b>${totalDistribuido}</b> distribuidas en todas las comandas:
         <ul class='text-start p-2'>${detalleCarritos}</ul>
-    </div>`;
+   </div> `;
 };
 
 // Validar stock considerando todos los carritos
@@ -80,7 +78,6 @@ export const validarStock = (producto) => {
     if (cantidadTotal >= producto.stock) {
         playErrorSound();
         document.addEventListener("keydown", bloquearEnter, true);
-
         Swal.fire({
             title: "Stock agotado",
             html: generarMensajeSinStock(producto, carritosConProducto),
@@ -89,6 +86,7 @@ export const validarStock = (producto) => {
             confirmButtonColor: "#22c55e",
             showCloseButton: true,
             customClass: { popup: "mi-alerta-stock" },
+            allowOutsideClick: true,
         });
 
         setTimeout(() => {
@@ -192,6 +190,7 @@ export const agregarCantidadAlCarrito = (
             icon: "warning",
             confirmButtonText: "Aceptar",
             confirmButtonColor: "#22c55e",
+            allowOutsideClick: true,
             showCloseButton: true,
             customClass: { popup: "mi-alerta-stock" },
         });

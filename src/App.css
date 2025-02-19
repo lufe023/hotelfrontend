@@ -21,3 +21,7 @@ transition: all 0.1s;
     border: none;
     outline: none;
   }
+
+  html, body {
+    overscroll-behavior: contain; /* Evita que los gestos táctiles cambien de página */
+  }

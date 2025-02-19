@@ -21,6 +21,20 @@ const PuntoDeVenta = () => {
   const [productos, setProductos] = useState([])
   const [favoritos, setFavoritos] = useState([]);
 
+  const handleTouch = (event) => {
+    if (event.touches.length > 1) {
+      event.preventDefault();
+    }
+  };
+  
+  useEffect(() => {
+    document.addEventListener("touchstart", handleTouch, { passive: false });
+  
+    return () => {
+      document.removeEventListener("touchstart", handleTouch);
+    };
+  }, []);
+  
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'F6') {
