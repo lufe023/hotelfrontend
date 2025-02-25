@@ -117,8 +117,10 @@ const bloquearEnter = (event) => {
               <div className="col-7 d-flex flex-column justify-content-between" style={{ minHeight: "100%" }}>
                 <div>
                   <span className="d-block">{item.name}</span>
-                  <small>
-                    ${Number(item.salePrice).toFixed(2)} x {item.cantidad} = ${(item.cantidad * Number(item.salePrice)).toFixed(2)}
+                  <small style={{fontSize: "0.8rem"}}>
+                    ${Number(item.salePrice).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} x 
+                    {item.cantidad} = 
+                    ${Number(item.salePrice * item.cantidad).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </small>
                 </div>
                 <button className="btn btn-danger px-3 mt-2 align-self-start" onClick={() => eliminarProducto(item.id)}>

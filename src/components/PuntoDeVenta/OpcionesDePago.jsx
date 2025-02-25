@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import getConfig from "../../utils/getConfig";
-import FirmaCliente from "./FirmaCliente";
+import SeleccionMetodoPago from "./SeleccionMetodoPago";
 
 const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago }) => {
   const [cambio, setCambio] = useState(0);
@@ -28,6 +28,7 @@ const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago })
       html: `
         <div class="form-group">
           <input 
+          autocomplete="off"
             type="text" 
             id="buscar-cliente-input" 
             class="form-control" 
@@ -322,12 +323,17 @@ const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago })
     }
   };
 
+  const manejarPagoConfirmado = (metodo, monto, extra) => {
+    console.log(`Pago confirmado: ${metodo}, Total: ${monto}, Extra: ${extra}`);
+    // Aquí puedes hacer lo que necesites con la info del pago
+  };
+  
   return (
     <div className="row">
       <div className="col-md-4">
         <div className="col-12 gap-2 d-flex ">
           
-     <a className="btn btn-primary w-50" onClick={handleBuscarCliente}>
+     <a className="btn btn-primary w-50 " onClick={handleBuscarCliente}>
     Buscar Cliente
       </a>
   <a className="btn btn-primary w-50" onClick={()=>agregarUsuario("")}>Registrar CLiente</a>
@@ -376,7 +382,7 @@ const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago })
 </div>
       <div className="col-md-4">
         <button className="btn btn-primary w-100 mb-3" onClick={seleccionarMetodoPago}>
-           Método de Pago
+          Método de Pago
         </button>
         <div className="d-flex align-items-center" onClick={seleccionarMetodoPago}>
           {metodoPagoIcono()}
@@ -384,15 +390,18 @@ const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago })
         </div>
       </div>
       <div className="col-md-4">
-        <FirmaCliente/>
-      <button className="btn btn-lg btn-success w-100" onClick={finalizarVenta}>
-          Finalizar Venta - Total: ${total.toFixed(2)}
-        </button>
+
+      {/* <button className="btn btn-lg btn-success w-100" onClick={finalizarVenta}>
+          Finalizar Venta - Total: ${Number(total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        </button> */}
+        <SeleccionMetodoPago total={total} onPagoConfirmado={manejarPagoConfirmado}  metodoPago={metodoPago} setMetodoPago={setMetodoPago}/>
         <h6>Total:</h6>
-        <p>${total.toFixed(2)}</p>
+        <p>${Number(total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
         {cambio > 0 && metodoPago === 'Efectivo' && (
   <p>
-    <strong>Cambio: $</strong>{cambio.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+
+          
+    <strong> Cambio: $</strong>{Number(cambio).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
   </p>
 )}
 
