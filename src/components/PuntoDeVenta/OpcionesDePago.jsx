@@ -4,12 +4,7 @@ import axios from "axios";
 import getConfig from "../../utils/getConfig";
 import SeleccionMetodoPago from "./SeleccionMetodoPago";
 
-const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago }) => {
-  const [cambio, setCambio] = useState(0);
-  const [facturasPendientes, setFacturasPendientes] = useState([
-    { id: 1, total: 1200 },
-    { id: 2, total: 800 },
-  ]); // Simulación de facturas
+const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago, tabActivo}) => {
   
   const findPeople = async (findWord, updateList) => {
     const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/users/userSearch`;
@@ -184,144 +179,65 @@ const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago })
   
  
 
-  const seleccionarMetodoPago = () => {
-    Swal.fire({
-      title: "Seleccionar Método de Pago",
-      html: `
-        <div class="form-group text-start">
-          <div class="form-check">
-            <input type="radio" class="form-check-input" id="metodo-efectivo" name="metodo-pago" value="Efectivo">
-            <label class="form-check-label" for="metodo-efectivo">
-              <i class="fas fa-money-bill-wave me-2 text-success" style="font-size: 2rem;"></i>Efectivo
-            </label>
-          </div>
-          <div class="form-check mt-3">
-            <input type="radio" class="form-check-input" id="metodo-tarjeta" name="metodo-pago" value="Tarjeta">
-            <label class="form-check-label" for="metodo-tarjeta">
-              <i class="fas fa-credit-card me-2 text-primary" style="font-size: 2rem;"></i>Tarjeta
-            </label>
-          </div>
-          <div class="form-check mt-3">
-            <input type="radio" class="form-check-input" id="metodo-factura" name="metodo-pago" value="Factura">
-            <label class="form-check-label" for="metodo-factura">
-              <i class="fas fa-receipt me-2 text-warning" style="font-size: 2rem;"></i>Factura
-            </label>
-          </div>
-        </div>
-      `,
-      showCancelButton: true,
-      confirmButtonText: "Seleccionar",
-      preConfirm: () => {
-        const radios = document.querySelectorAll("input[name='metodo-pago']");
-        let selectedValue = "";
-        radios.forEach((radio) => {
-          if (radio.checked) {
-            selectedValue = radio.value;
-          }
-        });
-        if (!selectedValue) {
-          Swal.showValidationMessage("Por favor selecciona un método de pago.");
-        }
-        return selectedValue;
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setMetodoPago(result.value);
-      }
-    });
-  };
+  // const seleccionarMetodoPago = () => {
+  //   Swal.fire({
+  //     title: "Seleccionar Método de Pago",
+  //     html: `
+  //       <div class="form-group text-start">
+  //         <div class="form-check">
+  //           <input type="radio" class="form-check-input" id="metodo-efectivo" name="metodo-pago" value="Efectivo">
+  //           <label class="form-check-label" for="metodo-efectivo">
+  //             <i class="fas fa-money-bill-wave me-2 text-success" style="font-size: 2rem;"></i>Efectivo
+  //           </label>
+  //         </div>
+  //         <div class="form-check mt-3">
+  //           <input type="radio" class="form-check-input" id="metodo-tarjeta" name="metodo-pago" value="Tarjeta">
+  //           <label class="form-check-label" for="metodo-tarjeta">
+  //             <i class="fas fa-credit-card me-2 text-primary" style="font-size: 2rem;"></i>Tarjeta
+  //           </label>
+  //         </div>
+  //         <div class="form-check mt-3">
+  //           <input type="radio" class="form-check-input" id="metodo-factura" name="metodo-pago" value="Factura">
+  //           <label class="form-check-label" for="metodo-factura">
+  //             <i class="fas fa-receipt me-2 text-warning" style="font-size: 2rem;"></i>Factura
+  //           </label>
+  //         </div>
+  //       </div>
+  //     `,
+  //     showCancelButton: true,
+  //     confirmButtonText: "Seleccionar",
+  //     preConfirm: () => {
+  //       const radios = document.querySelectorAll("input[name='metodo-pago']");
+  //       let selectedValue = "";
+  //       radios.forEach((radio) => {
+  //         if (radio.checked) {
+  //           selectedValue = radio.value;
+  //         }
+  //       });
+  //       if (!selectedValue) {
+  //         Swal.showValidationMessage("Por favor selecciona un método de pago.");
+  //       }
+  //       return selectedValue;
+  //     },
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       setMetodoPago(result.value);
+  //     }
+  //   });
+  // };
 
-  const finalizarVenta = () => {
-    if (!metodoPago) {
-      Swal.fire("Error", "Seleccione un método de pago.", "error");
-      return;
-    }
-  
-    if (metodoPago === "Efectivo") {
-      Swal.fire({
-        title: "Pago en Efectivo",
-        input: "number",
-        inputLabel: "¿Cuánto pagó el cliente?",
-        inputPlaceholder: "Ingrese el monto recibido",
-        inputValue: Math.ceil(total),
-        inputAutoFocus: true,
-        showCancelButton: true,
-        confirmButtonText: "Calcular Cambio",
-        preConfirm: (value) => {
-          if (!value || isNaN(value) || value < total) {
-            Swal.showValidationMessage("El monto ingresado es inválido o insuficiente.");
-          }
-          return value;
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          setCambio(result.value - total);
-        }
-      });
-    } 
-    else if (metodoPago === "Factura") {
-      Swal.fire({
-        title: "Facturas Pendientes",
-        html: `
-          <div class="form-group" style="max-height: 300px; overflow-y: auto;">
-            <label for="facturas-select">Selecciona una factura:</label>
-            <div class="form-check">
-              <input type="radio" class="form-check-input" id="factura-nueva" name="factura-pago" value="" checked>
-              <label class="form-check-label" for="factura-nueva">
-                Nueva Factura
-              </label>
-            </div>
-            ${facturasPendientes
-              .map((factura) => `
-                <div class="form-check">
-                  <input type="radio" class="form-check-input" id="factura-${factura.id}" name="factura-pago" value="${factura.id}">
-                  <label class="form-check-label" for="factura-${factura.id}">
-                    Factura #${factura.id} - Total: $${factura.total}
-                  </label>
-                </div>
-              `)
-              .join("")}
-          </div>
-        `,
-        showCancelButton: true,
-        confirmButtonText: "Agregar Total",
-        preConfirm: () => {
-          const radios = document.querySelectorAll("input[name='factura-pago']");
-          let selectedFactura = "";
-          radios.forEach((radio) => {
-            if (radio.checked) {
-              selectedFactura = radio.value;
-            }
-          });
-          return selectedFactura;
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          const facturaSeleccionada = result.value;
-          if (facturaSeleccionada === "") {
-            Swal.fire("Nueva Factura", `Se ha creado una nueva factura por $${total.toFixed(2)}`, "success");
-          } else {
-            const factura = facturasPendientes.find((f) => f.id.toString() === facturaSeleccionada);
-            Swal.fire("Factura Actualizada", `Total agregado a la factura #${factura.id}`, "success");
-          }
-        }
-      });
-    }
-    
-  };
-
-  const metodoPagoIcono = () => {
-    switch (metodoPago) {
-      case "Efectivo":
-        return <i className="fas fa-money-bill-wave text-success me-2" style={{ fontSize: "2rem" }}></i>;
-      case "Tarjeta":
-        return <i className="fas fa-credit-card text-primary me-2" style={{ fontSize: "2rem" }}></i>;
-      case "Factura":
-        return <i className="fas fa-receipt text-warning me-2" style={{ fontSize: "2rem" }}></i>;
-      default:
-        return null;
-    }
-  };
+  // const metodoPagoIcono = () => {
+  //   switch (metodoPago) {
+  //     case "Efectivo":
+  //       return <i className="fas fa-money-bill-wave text-success me-2" style={{ fontSize: "2rem" }}></i>;
+  //     case "Tarjeta":
+  //       return <i className="fas fa-credit-card text-primary me-2" style={{ fontSize: "2rem" }}></i>;
+  //     case "Factura":
+  //       return <i className="fas fa-receipt text-warning me-2" style={{ fontSize: "2rem" }}></i>;
+  //     default:
+  //       return null;
+  //   }
+  // };
 
   const manejarPagoConfirmado = (metodo, monto, extra) => {
     console.log(`Pago confirmado: ${metodo}, Total: ${monto}, Extra: ${extra}`);
@@ -380,7 +296,7 @@ const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago })
     </div>
   )}
 </div>
-      <div className="col-md-4">
+      {/* <div className="col-md-4">
         <button className="btn btn-primary w-100 mb-3" onClick={seleccionarMetodoPago}>
           Método de Pago
         </button>
@@ -388,24 +304,19 @@ const OpcionesPOS = ({ total, cliente, setCliente,  metodoPago, setMetodoPago })
           {metodoPagoIcono()}
           <span>{metodoPago}</span>
         </div>
-      </div>
-      <div className="col-md-4">
+      </div> */}
+      <div className="col-md-4 p-3">
 
       {/* <button className="btn btn-lg btn-success w-100" onClick={finalizarVenta}>
           Finalizar Venta - Total: ${Number(total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </button> */}
-        <SeleccionMetodoPago total={total} onPagoConfirmado={manejarPagoConfirmado}  metodoPago={metodoPago} setMetodoPago={setMetodoPago}/>
-        <h6>Total:</h6>
-        <p>${Number(total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-        {cambio > 0 && metodoPago === 'Efectivo' && (
-  <p>
-
-          
-    <strong> Cambio: $</strong>{Number(cambio).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-  </p>
-)}
-
        
+        <h6 className="p-0">Total:</h6>
+        <p className="p-0" style={{fontSize:50}}>${Number(total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+       
+      </div>
+      <div className="col-md-4">  
+      <SeleccionMetodoPago total={total} onPagoConfirmado={manejarPagoConfirmado}  metodoPago={metodoPago} setMetodoPago={setMetodoPago} tabActivo={tabActivo} />
       </div>
     </div>
   );

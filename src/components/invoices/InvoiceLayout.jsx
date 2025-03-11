@@ -12,21 +12,7 @@ import InvoiceList from "./InvoiceList";
 
 const InvoiceLayout = () => {
   const { isPinned } = useMenu();
-  const [areas, setAreas] = useState([]); // Lista de áreas
-  const fetchAreas = () => {
-    axios
-  .get(`${import.meta.env.VITE_API_SERVER}/api/v1/areas`, getConfig())
-  .then((response) => {
-    setAreas(response.data);
-  })
-  .catch((error) => {
-    Swal.fire({
-      icon: "error",
-      title: "Error al cargar áreas",
-      text: error.response?.data?.message || "No se pudieron cargar las áreas",
-    });
-  });
-  };
+  
   return (
     <div className={`g-sidenav-show ${isPinned ? "g-sidenav-pinned" : ""}`}>
       <Aside />

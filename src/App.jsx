@@ -19,6 +19,8 @@ import ProtectedAdmin from './components/administrator/adminUtils/ProtectedAdmin
 import PuntoDeVenta from './components/PuntoDeVenta/PuntoDeVenta';
 import InvoiceDetails from './components/invoices/InvoiceDetails';
 import InvoiceLayout from './components/invoices/InvoiceLayout';
+import Inventory from './components/inventory/Inventory';
+import DepartmentsAdmin from './components/inventory/DepartmentsAdmin';
 
 function App() {
   const navigate = useNavigate();
@@ -67,6 +69,8 @@ function App() {
           <Route path='/ventas' element={<PuntoDeVenta />} />
           <Route path="/invoices" element={<InvoiceLayout />} />
           <Route path="/invoices/:id" element={<InvoiceDetails />} />
+          <Route path="/inventory" element={<Inventory/>} />
+          <Route path="/departmens" element={<DepartmentsAdmin/>} />
         </Route>
 
         <Route element={<ProtectedAdmin />}>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const PuntoDeVentaMenu = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -33,8 +34,12 @@ const PuntoDeVentaMenu = () => {
       <i className="fas fa-bars" />
       </button>
       <div className={`dropdown-menu dropdown-menu-end ${openDropdown === 'menu' ? 'show' : ''}`}>
+      <Link to={'/invoices'} className="dropdown-item cursor-pointer" >
+      <i className="fas fa-file-invoice-dollar" /> Cuentas
+       </Link>
         <a className="dropdown-item cursor-pointer" >
-       <i className="fas fa-cog" /> Configuración del POS</a>
+       <i className="fas fa-cog" /> Configuración del POS
+       </a>
 
         <a className="dropdown-item cursor-pointer" onClick={toggleAudioGuide}> 
             {localStorage.getItem('audio') === 'true' ? <span><i className="fas fa-volume-up" /> Con </span>: <span><i className="fas fa-volume-mute" /> Sin </span>}     Guía de Audio 

@@ -72,9 +72,12 @@ const Aside = () => {
     </Link>
   </div>
   <hr className="horizontal dark mt-4" />
+{/* 
+  display: block;
+    overflow: auto;
+    height: calc(100vh); */}
+  <div className="collapse  w-auto scroll " id="sidenav-collapse-main" style={{ overflow: 'auto', height: 'calc(100vh - 100px)', display: 'block' }}>
 
-  <div className="collapse navbar-collapse w-auto scroll " id="sidenav-collapse-main" >
-  {/* <div className="collapse navbar-collapse w-auto ps  ps--scrolling-y" id="sidenav-collapse-main"> */}
     <ul className="navbar-nav">
       <li className="nav-item">
         <NavLink className="nav-link hover " to={'/'}>
@@ -145,15 +148,19 @@ const Aside = () => {
           <span className="nav-link-text ms-1">Habitaciones</span>
         </NavLink>
       </li>
+              <hr className="horizontal dark mt-4" />
+      <li className="nav-header nav-item">
+        <a className='nav-link'>   Punto de Venta</a>
+      </li>
+
       <li className="nav-item ">
         <NavLink className="nav-link  hover" to={'/ventas'}>
         <div className='icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center '>
   
-
         <svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
         <path d="M602 118.6L537.1 15C531.3 5.7 521 0 510 0H106C95 0 84.7 5.7 78.9 15L14 118.6c-33.5 53.5-3.8 127.9 58.8 136.4 4.5 .6 9.1 .9 13.7 .9 29.6 0 55.8-13 73.8-33.1 18 20.1 44.3 33.1 73.8 33.1 29.6 0 55.8-13 73.8-33.1 18 20.1 44.3 33.1 73.8 33.1 29.6 0 55.8-13 73.8-33.1 18.1 20.1 44.3 33.1 73.8 33.1 4.7 0 9.2-.3 13.7-.9 62.8-8.4 92.6-82.8 59-136.4zM529.5 288c-10 0-19.9-1.5-29.5-3.8V384H116v-99.8c-9.6 2.2-19.5 3.8-29.5 3.8-6 0-12.1-.4-18-1.2-5.6-.8-11.1-2.1-16.4-3.6V480c0 17.7 14.3 32 32 32h448c17.7 0 32-14.3 32-32V283.2c-5.4 1.6-10.8 2.9-16.4 3.6-6.1 .8-12.1 1.2-18.2 1.2z"/></svg>
         </div>
-          <span className="nav-link-text ms-1">Ventas</span>
+          <span className="nav-link-text ms-1">P. Ventas</span>
         </NavLink>
       </li>
 
@@ -170,7 +177,31 @@ const Aside = () => {
         </NavLink>
       </li>
 
-     
+      <li className="nav-item ">
+        <NavLink className="nav-link  hover" to={'/inventory'}>
+        <div className='icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center '>
+
+
+       <svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">{/*!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.*/}<path d="M0 32C0 14.3 14.3 0 32 0l72.9 0c27.5 0 52 17.6 60.7 43.8L257.7 320c30.1 .5 56.8 14.9 74 37l202.1-67.4c16.8-5.6 34.9 3.5 40.5 20.2s-3.5 34.9-20.2 40.5L352 417.7c-.9 52.2-43.5 94.3-96 94.3c-53 0-96-43-96-96c0-30.8 14.5-58.2 37-75.8L104.9 64 32 64C14.3 64 0 49.7 0 32zM244.8 134.5c-5.5-16.8 3.7-34.9 20.5-40.3L311 79.4l19.8 60.9 60.9-19.8L371.8 59.6l45.7-14.8c16.8-5.5 34.9 3.7 40.3 20.5l49.4 152.2c5.5 16.8-3.7 34.9-20.5 40.3L334.5 307.2c-16.8 5.5-34.9-3.7-40.3-20.5L244.8 134.5z" /></svg>
+
+        </div>
+          <span className="nav-link-text ms-1">Inventario</span>
+        </NavLink>
+      </li>
+      <li className="nav-item ">
+        <NavLink className="nav-link  hover" to={'/departmens'}>
+        <div className='icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center '>
+
+
+       <svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+       {/*!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.*/}
+       <path d="M602 118.6L537.1 15C531.3 5.7 521 0 510 0H106C95 0 84.7 5.7 78.9 15L14 118.6c-33.5 53.5-3.8 127.9 58.8 136.4 4.5 .6 9.1 .9 13.7 .9 29.6 0 55.8-13 73.8-33.1 18 20.1 44.3 33.1 73.8 33.1 29.6 0 55.8-13 73.8-33.1 18 20.1 44.3 33.1 73.8 33.1 29.6 0 55.8-13 73.8-33.1 18.1 20.1 44.3 33.1 73.8 33.1 4.7 0 9.2-.3 13.7-.9 62.8-8.4 92.6-82.8 59-136.4zM529.5 288c-10 0-19.9-1.5-29.5-3.8V384H116v-99.8c-9.6 2.2-19.5 3.8-29.5 3.8-6 0-12.1-.4-18-1.2-5.6-.8-11.1-2.1-16.4-3.6V480c0 17.7 14.3 32 32 32h448c17.7 0 32-14.3 32-32V283.2c-5.4 1.6-10.8 2.9-16.4 3.6-6.1 .8-12.1 1.2-18.2 1.2z" /></svg>
+
+        </div>
+          <span className="nav-link-text ms-1">Departamentos</span>
+        </NavLink>
+      </li>
+      
       <li className="nav-item ">
         <NavLink className="nav-link  hover" to={'/admin'}>
         <div className='icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center '>
@@ -185,11 +216,8 @@ const Aside = () => {
           <span className="nav-link-text ms-1">Administrador</span>
         </NavLink>
       </li>
-
     </ul>
-   
       </div>
- 
   <div className="mx-3" style={{left: 10, bottom: 50, position:'absolute'}}> 
     <div className="sidenav-footer ">
     <a className="btn btn-primary mt-3 w-100" onClick={()=>LogGoutConfirm()}>Salir del Sistema</a>

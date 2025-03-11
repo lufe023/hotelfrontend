@@ -8,7 +8,7 @@ import "./PuntoDeVenta.css";
 import Swal from 'sweetalert2';
 import HorizontalScroll from "./HorizontalScroll";
 import { cargarFavoritos } from "./logicaFavoritos";
-import { findItem } from "./findProducts";
+import { eliminarTab } from "./EliminarTab";
 
 const PuntoDeVenta = () => {
   const LOCAL_STORAGE_KEY = "puntoDeVentaTabs";
@@ -144,25 +144,12 @@ const cerrarTabConfirmation = (id) => {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        eliminarTab(id);
+        eliminarTab(id, tabs, setTabs, setActiveTab);
       }
     });
   } else {
     // Si el carrito está vacío, cerrar el tab directamente
-    eliminarTab(id);
-  }
-};
-
-// Función para eliminar el tab después de la confirmación
-const eliminarTab = (id) => {
-  const updatedTabs = tabs.filter(tab => tab.id !== id);
-
-  if (updatedTabs.length === 0) {
-    setTabs([{ id: 1, cliente: { firstName: "No registrado", telefono: "1", email: "" }, carrito: [], total: 0 }]);
-    setActiveTab(1);
-  } else {
-    setActiveTab(updatedTabs[updatedTabs.length - 1].id);
-    setTabs(updatedTabs);
+    eliminarTab(id, tabs, setTabs, setActiveTab);
   }
 };
 
@@ -335,6 +322,7 @@ const eliminarTab = (id) => {
             }
             metodoPago={tabActivo?.metodoPago || 'Efectivo'}
             setMetodoPago={setMetodoPago}
+            tabActivo={tabActivo}
           />
         </div>
       </main>
