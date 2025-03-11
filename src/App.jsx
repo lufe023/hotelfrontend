@@ -3,7 +3,7 @@ import './App.css';
 import AppLayout from './components/layout/AppLayout';
 import ProtectedRoutes from './utils/ProtectedRoutes';
 import Error404 from './components/layout/Error404';
-import Login from './components/users/login';
+import Login from './components/users/Login';
 import Signup from './components/users/Signup';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
