@@ -1,1 +1,1 @@
-export {default} from './aside'
+export {default} from './Aside'
