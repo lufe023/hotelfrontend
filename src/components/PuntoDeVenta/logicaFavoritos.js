@@ -61,7 +61,15 @@ export const toggleFavorito = async (productoId, favoritos, setFavoritos) => {
 };
 
 export const cargarFavoritos = async (setFavoritos) => {
-    const URL = `${import.meta.env.VITE_API_SERVER}/api/v1/favorites`;
+    // Obtener el departmentId desde localStorage
+    const storedDepartment = JSON.parse(
+        localStorage.getItem("defaultDepartment")
+    );
+    const departmentId = storedDepartment ? storedDepartment.id : null;
+
+    const URL = `${
+        import.meta.env.VITE_API_SERVER
+    }/api/v1/favorites?departmentId=${departmentId}`;
     axios
         .get(URL, getConfig())
         .then((response) => {

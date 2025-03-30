@@ -25,3 +25,25 @@ transition: all 0.1s;
   html, body {
     overscroll-behavior: contain; /* Evita que los gestos táctiles cambien de página */
   }
+ 
+  /* Estilos específicos para el carrito - no afectan otros componentes */
+.carrito-card {
+  will-change: height;
+  position: relative;
+}
+
+.carrito-card.collapsed-card {
+  height: 60px !important; /* Altura fija cuando está colapsado */
+}
+
+.carrito-body {
+  transition: 
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.carrito-card.collapsed-card .carrito-body {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}

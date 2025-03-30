@@ -31,10 +31,15 @@ export const obtenerCantidadTotalEnCarritos = (productoId) => {
     return { cantidadTotal, carritosConProducto };
 };
 
-const generarMensajeSinStock = (producto, carritosConProducto) => {
+const generarMensajeSinStock = (producto, carritosConProducto = []) => {
+    // Asegurar que carritosConProducto sea un array
+    if (!Array.isArray(carritosConProducto)) {
+        carritosConProducto = [];
+    }
+
     // Agrupar por cliente para evitar duplicados
     const agrupadosPorCliente = carritosConProducto.reduce((acc, carrito) => {
-        const nombreCliente = carrito.cliente.firstName || "No registrado";
+        const nombreCliente = carrito.cliente?.firstName || "No registrado";
         const cantidad = carrito.carrito.reduce((total, item) => {
             if (item.id === producto.id) total += item.cantidad;
             return total;
@@ -63,19 +68,25 @@ const generarMensajeSinStock = (producto, carritosConProducto) => {
 
     return `
     <div class='text-start'>
-        No hay más unidades disponibles de <b>${producto.name}</b>. 
+        No hay más unidades disponibles de <b>${producto.name}</b> en este departamento. 
         Actualmente hay <b>${totalDistribuido}</b> distribuidas en todas las comandas:
         <ul class='text-start p-2'>${detalleCarritos}</ul>
    </div> `;
 };
 
 // Validar stock considerando todos los carritos
-export const validarStock = (producto) => {
+export const validarStock = (producto, departmentId) => {
+    // Obtener la cantidad total del producto en todos los carritos
     const { cantidadTotal, carritosConProducto } =
         obtenerCantidadTotalEnCarritos(producto.id);
 
-    // Validar si la cantidad total en todos los carritos supera el stock disponible
-    if (cantidadTotal >= producto.stock) {
+    // Calcular el stock disponible en el departamento seleccionado
+    const stockDepartamento = producto.stocks
+        .filter((stock) => stock.departmentId === departmentId) // Filtrar por departamento
+        .reduce((total, stock) => total + stock.quantity, 0); // Sumar las cantidades
+
+    // Validar si la cantidad total en todos los carritos supera el stock disponible en el departamento
+    if (cantidadTotal >= stockDepartamento) {
         playErrorSound();
         document.addEventListener("keydown", bloquearEnter, true);
         Swal.fire({
@@ -108,7 +119,12 @@ const bloquearEnter = (event) => {
 };
 
 // Agregar producto al carrito validando stock
-export const agregarAlCarrito = (carrito, setCarrito, producto) => {
+export const agregarAlCarrito = (
+    carrito,
+    setCarrito,
+    producto,
+    departmentId
+) => {
     if (localStorage.getItem("audio") === "true") {
         const utterance = new SpeechSynthesisUtterance(producto.name);
         utterance.rate = 1.15;
@@ -117,16 +133,16 @@ export const agregarAlCarrito = (carrito, setCarrito, producto) => {
     }
 
     // Validar stock total
-    if (!validarStock(producto, carrito)) return;
+    if (!validarStock(producto, departmentId)) return;
 
     const existeEnCarrito = carrito.find((item) => item.id === producto.id);
     const nuevoCarrito = existeEnCarrito
         ? carrito.map((item) =>
               item.id === producto.id
-                  ? { ...item, cantidad: item.cantidad + 1 }
+                  ? { ...item, cantidad: item.cantidad + 1, departmentId } // Agregar departmentId
                   : item
           )
-        : [...carrito, { ...producto, cantidad: 1 }];
+        : [...carrito, { ...producto, cantidad: 1, departmentId }]; // Agregar departmentId
 
     setCarrito(nuevoCarrito);
 

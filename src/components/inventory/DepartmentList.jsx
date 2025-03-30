@@ -1,11 +1,29 @@
 import React from "react";
 import axios from "axios";
 import getConfig from "../../utils/getConfig";
+import Swal from "sweetalert2";
 
 const DepartmentList = ({ departments, setEditingDepartment, onDeleteDepartment }) => {
   const handleDelete = (id) => {
-    if (!window.confirm("¿Seguro que quieres eliminar este departamento?")) return;
 
+    Swal.fire({
+         title: '¿Estás seguro?',
+         html: `Se Eliminará este departamento, esto no es reversible .`,
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonText: 'Sí, Eliminar',
+         confirmButtonColor:'#ef4444',
+         cancelButtonText: 'Cancelar',
+       }).then((result) => {
+         if (result.isConfirmed) {
+          deleteDepartment(id);
+         }
+       });
+
+   
+  };
+
+  const deleteDepartment = (id) => {
     const backendUrl = import.meta.env.VITE_API_SERVER;
     const url = `${backendUrl}/api/v1/departments/${id}`;
 
@@ -13,18 +31,18 @@ const DepartmentList = ({ departments, setEditingDepartment, onDeleteDepartment 
       .delete(url, getConfig())
       .then(() => onDeleteDepartment(id))
       .catch((error) => console.error("Error eliminando el departamento:", error));
-  };
+  }
 
   return (
     <div className="card shadow-sm">
-      <div className="card-header bg-secondary text-white">
+      <div className="card-header pb-0">
         <h5 className="mb-0">Lista de Departamentos</h5>
       </div>
       <div className="card-body">
         <ul className="list-group">
           {departments.length > 0 ? (
-            departments.map((dept) => (
-              <li key={dept.id} className="list-group-item d-flex justify-content-between align-items-center">
+            departments.map((dept, idx) => (
+              <li key={idx} className="list-group-item d-flex justify-content-between align-items-center">
                 <div>
                   <strong>{dept.name}</strong><br />
                   <small>{dept.description}</small> {/* Mostrar la descripción */}

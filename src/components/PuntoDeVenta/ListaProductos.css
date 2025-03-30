@@ -1,4 +1,4 @@
-/* Estilos del scrollbar personalizado */
+* Estilos del scrollbar personalizado */
 .scroll::-webkit-scrollbar {
   width: 0px;
 }
