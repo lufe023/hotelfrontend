@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
     Button,
     Modal,
@@ -13,41 +13,42 @@ import {
     Grid,
 } from "@mui/material";
 import axios from "axios";
-import facturaPrinter from "./FacturaPrinter"; //
+import facturaPrinter from "./FacturaPrinter";
 import getConfig from "../../utils/getConfig";
-import { ta } from "date-fns/locale";
-import { agregarCantidadAlCarrito } from "./logicaDelCarrito";
 import Swal from "sweetalert2";
+import { cerrarTabConfirmation, eliminarTab } from "./EliminarTab";
+import { deleteTab } from "./tabsUtils";
+import { useNavigate } from "react-router-dom";
 
-const denominaciones = [2000, 1000, 500, 200, 100, 50]; // Denominaciones de billetes de R.D.
-
+const denominaciones = [2000, 1000, 500, 200, 100, 50];
 const primaryColor = "#f97316";
 
-const SeleccionMetodoPago = ({ total, onPagoConfirmado, tabActivo }) => {
+const SeleccionMetodoPago = ({ total, tabActivo, setActiveTab }) => {
+    const Navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [metodoPago, setMetodoPago] = useState("Efectivo");
     const [montoRecibido, setMontoRecibido] = useState(total);
     const [cambio, setCambio] = useState(0);
     const [denominacionSeleccionada, setDenominacionSeleccionada] =
         useState(null);
-    const [productos, setProductos] = useState([]);
-
-    // useEffect(() => {
-    //     // Obtener datos desde localStorage
-    //     const storedData = localStorage.getItem("puntoDeVentaTabs");
-    //     if (storedData) {
-    //         try {
-    //             const parsedData = JSON.parse(storedData);
-    //             setProductos(parsedData[0]?.carrito || []);
-    //         } catch (error) {
-    //             console.error(
-    //                 "Error al parsear los productos del localStorage:",
-    //                 error
-    //             );
-    //         }
-    //     }
-    // }, []);
-
+    const LOCAL_STORAGE_KEY = "puntoDeVentaTabs";
+    const [tabs, setTabs] = useState(() => {
+        const storedTabs = localStorage.getItem(LOCAL_STORAGE_KEY);
+        return storedTabs
+            ? JSON.parse(storedTabs)
+            : [
+                  {
+                      id: 1,
+                      cliente: {
+                          firstName: "No registrado",
+                          telefono: "1",
+                          email: "",
+                      },
+                      carrito: [],
+                      total: 0,
+                  },
+              ];
+    });
     const handleOpen = () => {
         setMontoRecibido(total);
         setCambio(0);
@@ -80,89 +81,86 @@ const SeleccionMetodoPago = ({ total, onPagoConfirmado, tabActivo }) => {
         setMontoRecibido(denominacion);
         setCambio(denominacion - total);
     };
+    const handleConfirmarPago = async () => {
+        try {
+            const { carrito, cliente } = tabActivo;
 
-    const handleConfirmarPago = () => {
-        if (metodoPago === "Efectivo" && montoRecibido < total) {
-            alert("El monto recibido es insuficiente.");
-            return;
-        }
+            // Validar que todos los productos tengan departmentId
+            const productosSinDepto = carrito.filter((p) => !p.departmentId);
+            if (productosSinDepto.length > 0) {
+                Swal.fire({
+                    title: "Error",
+                    text: `Los siguientes productos no tienen departamento asignado: ${productosSinDepto
+                        .map((p) => p.name)
+                        .join(", ")}`,
+                    icon: "error",
+                });
+                return;
+            }
 
-        const primeraVenta = tabActivo;
+            // Preparar datos para la factura
+            const facturaData = {
+                cliente: {
+                    firstName: cliente?.firstName || "Consumidor Final",
+                    telefono: cliente?.telefono || "",
+                    email: cliente?.email || "",
+                    id: cliente?.id || null,
+                },
+                total,
+                paymentMethod:
+                    metodoPago === "Efectivo"
+                        ? "cash"
+                        : metodoPago === "Tarjeta"
+                        ? "credit_card"
+                        : "invoice",
+                invoiceDetails: carrito.map((producto) => ({
+                    itemId: producto.id,
+                    itemName: producto.name,
+                    itemDescription: producto.description || "",
+                    quantity: producto.cantidad,
+                    unitPrice: producto.salePrice,
+                    totalPrice: producto.cantidad * producto.salePrice,
+                    departmentId: producto.departmentId,
+                    orderType: producto.orderType || "product", // Asegúrate que esto viene del carrito
+                })),
+            };
 
-        const facturaData = {
-            cliente: primeraVenta.cliente || {
-                firstName: "",
-                telefono: "",
-                email: "",
-            },
-            total: primeraVenta.total || 0, // Usamos el total del localStorage directamente
-            paymentMethod: "cash",
-            // userId: primeraVenta.cliente?.id,
-            invoiceDetails: (primeraVenta.carrito || []).map((p) => ({
-                itemId: p.id,
-                itemName: p.name,
-                itemDescription: p.description,
-                quantity: p.cantidad,
-                unitPrice: p.salePrice,
-                totalPrice: p.cantidad * p.salePrice,
-                orderType: "product",
-                status: "served",
-                departmentId: p.departmentId,
-            })),
-        };
-
-        console.log("FacturaData:", facturaData);
-
-        axios
-            .post(
+            // Enviar al backend
+            const response = await axios.post(
                 `${import.meta.env.VITE_API_SERVER}/api/v1/invoice`,
                 facturaData,
                 getConfig()
-            )
-            .then((response) => {
-                console.log("Factura enviada con éxito:", response);
-                onPagoConfirmado(
-                    montoRecibido,
-                    cambio,
-                    denominacionSeleccionada
-                );
-                // Llamar al componente FacturaPrinter después de confirmar el pago
-                facturaPrinter(facturaData);
-                handleClose();
-            })
-            .catch((error) => {
-                console.error("Error al procesar la factura:", error);
-                handleClose();
+            );
 
-                // Obtener el mensaje de error del backend si está disponible
-                const errorMessage =
-                    error?.response?.data?.error ||
-                    error.message ||
-                    "Error desconocido";
-
-                if (errorMessage.includes("Stock insuficiente")) {
-                    const match = errorMessage.match(
-                        /id:([\w-]+)\. nombrado: (.+?)\. Disponible: (\d+), solicitado: (\d+)/
-                    );
-                    if (match) {
-                        const productId = match[1];
-                        const nombreProducto = match[2];
-                        const disponible = parseInt(match[3], 10);
-                        const solicitado = parseInt(match[4], 10);
-
-                        const mensaje = `Stock insuficiente para el producto "${nombreProducto}". Disponible: ${disponible}, solicitado: ${solicitado}.`;
-
-                        Swal.fire({
-                            title: "Stock insuficiente",
-                            text: mensaje,
-                            icon: "warning",
-                        });
-                    }
-                } else {
-                    console.log("Error desconocido:", errorMessage);
-                    alert("Error de conexión con el servidor.");
-                }
+            // Éxito
+            Swal.fire({
+                title: "Venta exitosa",
+                text: `Factura #${response.data.invoiceNumber} creada`,
+                icon: "success",
             });
+            facturaPrinter(facturaData);
+            // Cerrar modal y limpiar
+            handleClose();
+
+            //id, tabs, setTabs, setActiveTab
+
+            deleteTab(tabActivo.id);
+            Navigate(0);
+
+            //eliminarTab(tabActivo.id, tabs, setTabs, setActiveTab);
+        } catch (error) {
+            handleClose();
+            const errorMsg =
+                error.response?.data?.errors?.join("\n") ||
+                error.response?.data?.error ||
+                error.message;
+
+            Swal.fire({
+                title: "Error",
+                text: errorMsg || "Error al procesar la factura",
+                icon: "error",
+            });
+        }
     };
 
     const denominacionesFiltradas = denominaciones.filter(
@@ -184,6 +182,7 @@ const SeleccionMetodoPago = ({ total, onPagoConfirmado, tabActivo }) => {
                     >
                         Seleccionar Método de Pago
                     </Typography>
+
                     <FormControl component="fieldset" fullWidth>
                         <FormLabel
                             component="legend"
@@ -243,6 +242,7 @@ const SeleccionMetodoPago = ({ total, onPagoConfirmado, tabActivo }) => {
                             />
                         </RadioGroup>
                     </FormControl>
+
                     {metodoPago === "Efectivo" && (
                         <>
                             <TextField
@@ -258,12 +258,13 @@ const SeleccionMetodoPago = ({ total, onPagoConfirmado, tabActivo }) => {
                                 color="textSecondary"
                                 sx={{ mt: 1 }}
                             >
-                                Cambio: $
+                                Cambio: RD$
                                 {Number(cambio).toLocaleString("en-US", {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2,
                                 })}
                             </Typography>
+
                             <FormControl
                                 component="fieldset"
                                 fullWidth
@@ -304,7 +305,7 @@ const SeleccionMetodoPago = ({ total, onPagoConfirmado, tabActivo }) => {
                                                                 }}
                                                             />
                                                         }
-                                                        label={`$${Number(
+                                                        label={`RD$${Number(
                                                             denominacion
                                                         ).toLocaleString(
                                                             "en-US"
@@ -318,6 +319,7 @@ const SeleccionMetodoPago = ({ total, onPagoConfirmado, tabActivo }) => {
                             </FormControl>
                         </>
                     )}
+
                     <div
                         style={{
                             display: "flex",

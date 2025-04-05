@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import getConfig from "../../utils/getConfig";
 import SeleccionMetodoPago from "./SeleccionMetodoPago";
+import { cerrarTabConfirmation } from "./EliminarTab";
 
 const OpcionesPOS = ({
     total,
@@ -11,6 +12,7 @@ const OpcionesPOS = ({
     metodoPago,
     setMetodoPago,
     tabActivo,
+    setActiveTab,
 }) => {
     const findPeople = async (findWord, updateList) => {
         const URL = `${
@@ -235,13 +237,6 @@ const OpcionesPOS = ({
         });
     };
 
-    const manejarPagoConfirmado = (metodo, monto, extra) => {
-        console.log(
-            `Pago confirmado: ${metodo}, Total: ${monto}, Extra: ${extra}`
-        );
-        // Aquí puedes hacer lo que necesites con la info del pago
-    };
-
     return (
         <div className="row">
             <div className="col-md-4">
@@ -322,20 +317,8 @@ const OpcionesPOS = ({
                     </div>
                 )}
             </div>
-            {/* <div className="col-md-4">
-        <button className="btn btn-primary w-100 mb-3" onClick={seleccionarMetodoPago}>
-          Método de Pago
-        </button>
-        <div className="d-flex align-items-center" onClick={seleccionarMetodoPago}>
-          {metodoPagoIcono()}
-          <span>{metodoPago}</span>
-        </div>
-      </div> */}
-            <div className="col-md-4 p-3">
-                {/* <button className="btn btn-lg btn-success w-100" onClick={finalizarVenta}>
-          Finalizar Venta - Total: ${Number(total).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-        </button> */}
 
+            <div className="col-md-4 p-3">
                 <h6 className="p-0">Total:</h6>
                 <p className="p-0" style={{ fontSize: 50 }}>
                     $
@@ -348,10 +331,10 @@ const OpcionesPOS = ({
             <div className="col-md-4">
                 <SeleccionMetodoPago
                     total={total}
-                    onPagoConfirmado={manejarPagoConfirmado}
                     metodoPago={metodoPago}
                     setMetodoPago={setMetodoPago}
                     tabActivo={tabActivo}
+                    setActiveTab={setActiveTab}
                 />
             </div>
         </div>

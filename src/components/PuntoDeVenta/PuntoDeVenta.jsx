@@ -8,9 +8,11 @@ import "./PuntoDeVenta.css";
 import Swal from "sweetalert2";
 import HorizontalScroll from "./HorizontalScroll";
 import { cargarFavoritos } from "./logicaFavoritos";
-import { eliminarTab } from "./EliminarTab";
 import axios from "axios";
 import getConfig from "../../utils/getConfig";
+import { cerrarTabConfirmation } from "./EliminarTab";
+import { getDepartments } from "./getDepartments";
+import { useNavigate } from "react-router-dom";
 
 const PuntoDeVenta = () => {
     const LOCAL_STORAGE_KEY = "puntoDeVentaTabs";
@@ -24,31 +26,7 @@ const PuntoDeVenta = () => {
     const [favoritos, setFavoritos] = useState([]);
     const [departments, setDepartments] = useState([]);
     const inputRef = useRef(null); // Referencia al input
-
-    const getDepartments = () => {
-        axios
-            .get(
-                `${import.meta.env.VITE_API_SERVER}/api/v1/departments`,
-                getConfig()
-            )
-            .then((response) => {
-                setDepartments(response.data);
-                checkDefaultDepartment(response.data);
-            })
-            .catch((error) =>
-                console.error("Error cargando los departamentos:", error)
-            );
-    };
-
-    const checkDefaultDepartment = (departments) => {
-        const defaultDepartment = JSON.parse(
-            localStorage.getItem("defaultDepartment")
-        );
-
-        if (!defaultDepartment) {
-            showDepartmentSelectionAlert(departments);
-        }
-    };
+    const navigate = useNavigate();
 
     const showDepartmentSelectionAlert = (departments) => {
         Swal.fire({
@@ -76,21 +54,24 @@ const PuntoDeVenta = () => {
                     "defaultDepartment",
                     JSON.stringify(selectedDepartment)
                 );
+
                 Swal.fire({
-                    title: "Departamento seleccionado!",
+                    title: "Departamento seleccionado! recargando...",
                     icon: "success",
                     toast: true,
                     position: "top-end",
                     showConfirmButton: false,
-                    timer: 3000, //
+                    timer: 1000,
                     timerProgressBar: true,
+                }).then(() => {
+                    navigate(0);
                 });
             }
         });
     };
 
     useEffect(() => {
-        getDepartments();
+        getDepartments(setDepartments);
     }, []);
 
     const handleChangeDepartment = () => {
@@ -231,30 +212,6 @@ const PuntoDeVenta = () => {
         }
     }, [tabs, activeTab]);
 
-    const cerrarTabConfirmation = (id) => {
-        const tabToClose = tabs.find((tab) => tab.id === id);
-
-        // Si el tab tiene productos en el carrito, preguntar confirmación
-        if (tabToClose && tabToClose.carrito.length > 0) {
-            Swal.fire({
-                title: "¿Estás seguro?",
-                html: `<b>${tabToClose.cliente.firstName}</b> tiene productos en la comanda. Si lo cierras, se perderá la selección.`,
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Sí, cerrar tab",
-                confirmButtonColor: "#ef4444",
-                cancelButtonText: "Cancelar",
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    eliminarTab(id, tabs, setTabs, setActiveTab);
-                }
-            });
-        } else {
-            // Si el carrito está vacío, cerrar el tab directamente
-            eliminarTab(id, tabs, setTabs, setActiveTab);
-        }
-    };
-
     const tabActivo = tabs.find((tab) => tab.id === activeTab);
 
     const setMetodoPago = (nuevoMetodo) => {
@@ -283,7 +240,7 @@ const PuntoDeVenta = () => {
     const handleMouseDown = (e, id) => {
         if (e.button === 1) {
             // 1 es el botón del medio (rueda del mouse)
-            cerrarTabConfirmation(id);
+            cerrarTabConfirmation(id, tabs, setTabs, setActiveTab);
         } else {
             setIsDragging(false);
             dragTimeout.current = setTimeout(() => {
@@ -346,7 +303,6 @@ const PuntoDeVenta = () => {
                         handleChangeDepartment={handleChangeDepartment}
                     />
                 </div>
-
                 <div
                     className=" p-2 bg-white"
                     style={{
@@ -374,7 +330,12 @@ const PuntoDeVenta = () => {
                                     className="ms-2 text-danger"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        cerrarTabConfirmation(tab.id);
+                                        cerrarTabConfirmation(
+                                            tab.id,
+                                            tabs,
+                                            setTabs,
+                                            setActiveTab
+                                        );
                                     }}
                                 >
                                     ✖
@@ -465,6 +426,7 @@ const PuntoDeVenta = () => {
                         metodoPago={tabActivo?.metodoPago || "Efectivo"}
                         setMetodoPago={setMetodoPago}
                         tabActivo={tabActivo}
+                        setActiveTab={setActiveTab}
                     />
                 </div>
             </main>
